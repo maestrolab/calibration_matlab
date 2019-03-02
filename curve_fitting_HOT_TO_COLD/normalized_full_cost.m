@@ -43,47 +43,80 @@ data_50 = textread('data/filtered_data_50MPa.txt');
 data_100 = textread('data/filtered_data_100MPa.txt');
 data_200 = textread('data/filtered_data_200MPa.txt');
 data_300 = textread('data/filtered_data_300MPa.txt');
+data_400 = textread('data/filtered_data_400MPa.txt');
+data_500 = textread('data/filtered_data_500MPa.txt');
+data_600 = textread('data/filtered_data_600MPa.txt');
 
 T_50 = data_50(:,1) + 273.15;
 T_100 = data_100(:,1) + 273.15;
 T_200 = data_200(:,1) + 273.15;
 T_300 = data_300(:,1) + 273.15;
+T_400 = data_400(:,1) + 273.15;
+T_500 = data_500(:,1) + 273.15;
+T_600 = data_600(:,1) + 273.15;
+
 
 eps_50 = data_50(:,2);
 eps_100 = data_100(:,2);
 eps_200 = data_200(:,2);
 eps_300 = data_300(:,2);
+eps_400 = data_400(:,2);
+eps_500 = data_500(:,2);
+eps_600 = data_600(:,2);
+
 
 eps_50 = eps_50 - min(eps_50);
 eps_100 = eps_100 - min(eps_100);
 eps_200 = eps_200 - min(eps_200);
 eps_300 = eps_300 - min(eps_300);
+eps_400 = eps_400 - min(eps_400);
+eps_500 = eps_500 - min(eps_500);
+eps_600 = eps_600 - min(eps_600);
+
 
 sigma_50 = data_50(:,3);
 sigma_100 = data_100(:,3);
 sigma_200 = data_200(:,3);
 sigma_300 = data_300(:,3);
+sigma_400 = data_400(:,3);
+sigma_500 = data_500(:,3);
+sigma_600 = data_600(:,3);
+
 
 [min_T_50, I_50] = min(T_50);
 [min_T_100, I_100] = min(T_100);
 [min_T_200, I_200] = min(T_200);
 [min_T_300, I_300] = min(T_300);
+[min_T_400, I_400] = min(T_400);
+[min_T_500, I_500] = min(T_500);
+[min_T_600, I_600] = min(T_600);
+
 
 T_50 = [T_50(I_50:end)' T_50(1:I_50)']';
 T_100 = [T_100(I_100:end)' T_100(1:I_100)']';
 T_200 = [T_200(I_200:end)' T_200(1:I_200)']';
 T_300 = [T_300(I_300:end)' T_300(1:I_300)']';
+T_400 = [T_400(I_400:end)' T_400(1:I_400)']';
+T_500 = [T_500(I_500:end)' T_500(1:I_500)']';
+T_600 = [T_600(I_600:end)' T_600(1:I_600)']';
+
 
 eps_50 = [eps_50(I_50:end)' eps_50(1:I_50)']';
 eps_100 = [eps_100(I_100:end)' eps_100(1:I_100)']';
 eps_200 = [eps_200(I_200:end)' eps_200(1:I_200)']';
 eps_300 = [eps_300(I_300:end)' eps_300(1:I_300)']';
+eps_400 = [eps_400(I_400:end)' eps_400(1:I_400)']';
+eps_500 = [eps_500(I_500:end)' eps_500(1:I_500)']';
+eps_600 = [eps_600(I_600:end)' eps_600(1:I_600)']';
 
 
 sigma_50 = [sigma_50(I_50:end)' sigma_50(1:I_50)']';
 sigma_100 = [sigma_100(I_100:end)' sigma_100(1:I_100)']';
 sigma_200 = [sigma_200(I_200:end)' sigma_200(1:I_200)']';
 sigma_300 = [sigma_300(I_300:end)' sigma_300(1:I_300)']';
+sigma_400 = [sigma_400(I_400:end)' sigma_400(1:I_400)']';
+sigma_500 = [sigma_500(I_500:end)' sigma_500(1:I_500)']';
+sigma_600 = [sigma_600(I_600:end)' sigma_600(1:I_600)']';
 
 % plot(T_50,eps_50)
 % hold on
@@ -138,6 +171,9 @@ sigma_50 = 1e6 * 50*ones(size(sigma_50));
 sigma_100 = 1e6 * 100*ones(size(sigma_100));
 sigma_200 = 1e6 * 200*ones(size(sigma_200));
 sigma_300 = 1e6 * 300*ones(size(sigma_300));
+sigma_400 = 1e6 * 400*ones(size(sigma_400));
+sigma_500 = 1e6 * 500*ones(size(sigma_500));
+sigma_600 = 1e6 * 600*ones(size(sigma_600));
 
 
 % Elastic Prediction Check
@@ -151,11 +187,18 @@ try
     [eps_num_100, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_100, sigma_100, P, elastic_check, integration_scheme );
     [eps_num_200, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_200, sigma_200, P, elastic_check, integration_scheme );
     [eps_num_300, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_300, sigma_300, P, elastic_check, integration_scheme );
-    
+    [eps_num_400, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_400, sigma_400, P, elastic_check, integration_scheme );
+    [eps_num_500, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_500, sigma_500, P, elastic_check, integration_scheme );
+    [eps_num_600, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress( T_600, sigma_600, P, elastic_check, integration_scheme );
+
     eps_num_50 = eps_num_50 - min(eps_num_50);
     eps_num_100 = eps_num_100 - min(eps_num_100);
     eps_num_200 = eps_num_200 - min(eps_num_200);
     eps_num_300 = eps_num_300 - min(eps_num_300);
+    eps_num_400 = eps_num_400 - min(eps_num_400);
+    eps_num_500 = eps_num_500 - min(eps_num_500);
+    eps_num_600 = eps_num_600 - min(eps_num_600);
+
     
     figure(1)
     clf(1)
@@ -164,17 +207,26 @@ try
     plot(T_100,eps_num_100,'b', 'linewidth',2)
     plot(T_200,eps_num_200,'g', 'linewidth',2)
     plot(T_300,eps_num_300,'k', 'linewidth',2)
+    plot(T_400,eps_num_400,'k', 'linewidth',2)
+    plot(T_500,eps_num_500,'k', 'linewidth',2)
+    plot(T_600,eps_num_600,'k', 'linewidth',2)
+    
     plot(T_50,eps_50,'--r', 'linewidth',2)
     plot(T_100,eps_100,'--b', 'linewidth',2)
     plot(T_200,eps_200,'--g', 'linewidth',2)
     plot(T_300,eps_300,'--k', 'linewidth',2)
-    
+    plot(T_400,eps_400,'--k', 'linewidth',2)
+    plot(T_500,eps_500,'--k', 'linewidth',2)
+    plot(T_600,eps_600,'--k', 'linewidth',2)
+
     % Root-mean squared error:
     output = sqrt(sum((eps_50-eps_num_50).^2)/numel(eps_50));
     output = output + sqrt(sum((eps_100-eps_num_100).^2)/numel(eps_100));
     output = output + sqrt(sum((eps_200-eps_num_200).^2)/numel(eps_200));
     output = output + sqrt(sum((eps_300-eps_num_300).^2)/numel(eps_300));
-
+    output = output + sqrt(sum((eps_400-eps_num_400).^2)/numel(eps_400));
+    output = output + sqrt(sum((eps_500-eps_num_500).^2)/numel(eps_500));
+    output = output + sqrt(sum((eps_600-eps_num_600).^2)/numel(eps_600));
 
     if (initial_error == 0)
         initial_error = output;
@@ -184,13 +236,16 @@ try
     delta_eps_100 = (max(eps_100) - min(eps_100)) - (max(eps_num_100) - min(eps_num_100));
     delta_eps_200 = (max(eps_200) - min(eps_200)) - (max(eps_num_200) - min(eps_num_200));
     delta_eps_300 = (max(eps_300) - min(eps_300)) - (max(eps_num_300) - min(eps_num_300));
-   
+    delta_eps_400 = (max(eps_400) - min(eps_400)) - (max(eps_num_400) - min(eps_num_400));
+    delta_eps_500 = (max(eps_500) - min(eps_500)) - (max(eps_num_500) - min(eps_num_500));
+    delta_eps_600 = (max(eps_600) - min(eps_600)) - (max(eps_num_600) - min(eps_num_600));
+
     
 %     disp(delta_eps_50)
 %     disp(delta_eps_100)
 %     disp(delta_eps_150)
 %     disp(delta_eps_200)
-    delta_eps_error = sqrt((delta_eps_50^2 + delta_eps_100^2 + delta_eps_200^2+ delta_eps_300^2)/4.);
+    delta_eps_error = sqrt((delta_eps_50^2 + delta_eps_100^2 + delta_eps_200^2 + delta_eps_300^2 + delta_eps_400^2 + delta_eps_500^2 + delta_eps_600^2)/7.);
 
     if (initial_delta_eps == 0)
         initial_delta_eps = delta_eps_error;
