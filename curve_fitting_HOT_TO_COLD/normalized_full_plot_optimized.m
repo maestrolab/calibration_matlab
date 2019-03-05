@@ -24,13 +24,13 @@ x = x.*(ub - lb) + lb;
 % - data_sigma(1): Temperature (in Celsius)
 % - data_sigma(2): Strain
 % - data_sigma(3): Stress
-data_50 = textread('data/filtered_data_50MPa.txt');
-data_100 = textread('data/filtered_data_100MPa.txt');
-data_200 = textread('data/filtered_data_200MPa.txt');
-data_300 = textread('data/filtered_data_300MPa.txt');
-data_400 = textread('data/filtered_data_400MPa.txt');
-data_500 = textread('data/filtered_data_500MPa.txt');
-data_600 = textread('data/filtered_data_600MPa.txt');
+data_50 = textread('data/Karaman/filtered_data_50MPa.txt');
+data_100 = textread('data/Karaman/filtered_data_100MPa.txt');
+data_200 = textread('data/Karaman/filtered_data_200MPa.txt');
+data_300 = textread('data/Karaman/filtered_data_300MPa.txt');
+data_400 = textread('data/Karaman/filtered_data_400MPa.txt');
+data_500 = textread('data/Karaman/filtered_data_500MPa.txt');
+data_600 = textread('data/Karaman/filtered_data_600MPa.txt');
 
 
 
