@@ -269,49 +269,49 @@ if filename == "original"
     data_50 = textread('data/Original/filtered_data_50MPa.txt');
     data_100 = textread('data/Original/filtered_data_100MPa.txt');
     data_150 = textread('data/Original/filtered_data_150MPa.txt');
-    % data_172 = textread('data/Original/filtered_data_172MPa.txt');
+    data_172 = textread('data/Original/filtered_data_172MPa.txt');
     data_200 = textread('data/Original/filtered_data_200MPa.txt');
 
     T_50 = data_50(:,1) + 273.15;
     T_100 = data_100(:,1) + 273.15;
     T_150 = data_150(:,1) + 273.15;
-    % T_172 = data_172(:,1) + 273.15;
+    T_172 = data_172(:,1) + 273.15;
     T_200 = data_200(:,1) + 273.15;
 
     eps_50 = data_50(:,2);
     eps_100 = data_100(:,2);
     eps_150 = data_150(:,2);
-    % eps_172 = data_172(:,2);
+    eps_172 = data_172(:,2);
     eps_200 = data_200(:,2);
 
     sigma_50 = data_50(:,3);
     sigma_100 = data_100(:,3);
     sigma_150 = data_150(:,3);
-    % sigma_172 = data_172(:,3);
+    sigma_172 = data_172(:,3);
     sigma_200 = data_200(:,3);
 
     [min_T_50, I_50] = min(T_50);
     [min_T_100, I_100] = min(T_100);
     [min_T_150, I_150] = min(T_150);
-    % [min_T_172, I_172] = min(T_172);
+    [min_T_172, I_172] = min(T_172);
     [min_T_200, I_200] = min(T_200);
 
     T_50 = [T_50(I_50:end)' T_50(1:I_50)']';
     T_100 = [T_100(I_100:end)' T_100(1:I_100)']';
     T_150 = [T_150(I_150:end)' T_150(1:I_150)']';
-    % T_172 = [T_172(I_172:end)' T_172(1:I_172)']';
+    T_172 = [T_172(I_172:end)' T_172(1:I_172)']';
     T_200 = [T_200(I_200:end)' T_200(1:I_200)']';
 
     eps_50 = [eps_50(I_50:end)' eps_50(1:I_50)']';
     eps_100 = [eps_100(I_100:end)' eps_100(1:I_100)']';
     eps_150 = [eps_150(I_150:end)' eps_150(1:I_150)']';
-    % eps_172 = [eps_172(I_172:end)' eps_172(1:I_172)']';
+    eps_172 = [eps_172(I_172:end)' eps_172(1:I_172)']';
     eps_200 = [eps_200(I_200:end)' eps_200(1:I_200)']';
 
     sigma_50 = [sigma_50(I_50:end)' sigma_50(1:I_50)']';
     sigma_100 = [sigma_100(I_100:end)' sigma_100(1:I_100)']';
     sigma_150 = [sigma_150(I_150:end)' sigma_150(1:I_150)']';
-    % sigma_172 = [sigma_172(I_172:end)' sigma_172(1:I_172)']';
+    sigma_172 = [sigma_172(I_172:end)' sigma_172(1:I_172)']';
     sigma_200 = [sigma_200(I_200:end)' sigma_200(1:I_200)']';
 
     % INPUT:
@@ -441,10 +441,10 @@ if filename == "numerical_experimental_comparison"
     % - data_sigma(2): Strain
     % - data_sigma(3): Stress
     
-    data_F1 = textread('data/numerical_experimental_comparison/February27_Test1.txt');
-    data_F2 = textread('data/numerical_experimental_comparison/February28_Test2.txt');
-    data_M1 = textread('data/numerical_experimental_comparison/March8_2cpm.txt');
-    data_M2 = textread('data/numerical_experimental_comparison/March8_6cpm.txt');
+    data_F1 = textread('data/Original/February27_Test1.txt');
+    data_F2 = textread('data/Original/February28_Test2.txt');
+    data_M1 = textread('data/Original/March8_2cpm.txt');
+    data_M2 = textread('data/Original/March8_6cpm.txt');
 
     T_F1 = data_F1(:,1) + 273.15;
     T_F2 = data_F2(:,1) + 273.15;
