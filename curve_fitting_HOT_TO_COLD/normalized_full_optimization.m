@@ -38,7 +38,7 @@ initial_delta_eps = 0;
 
 % filename = "original";
 % filename = "karaman";
-filename = "numerical_experimental_comparison";
+filename = "karaman";
 
 if filename == "karaman"
    

@@ -42,13 +42,13 @@ if filename == "karaman"
     % - data_sigma(1): Temperature (in Celsius)
     % - data_sigma(2): Strain
     % - data_sigma(3): Stress
-    data_50 = textread('data/Karaman/filtered_data_50MPa.txt');
-    data_100 = textread('data/Karaman/filtered_data_100MPa.txt');
-    data_200 = textread('data/Karaman/filtered_data_200MPa.txt');
-    data_300 = textread('data/Karaman/filtered_data_300MPa.txt');
-    data_400 = textread('data/Karaman/filtered_data_400MPa.txt');
-    data_500 = textread('data/Karaman/filtered_data_500MPa.txt');
-    data_600 = textread('data/Karaman/filtered_data_600MPa.txt');
+    data_50 = textread('../data/Karaman/filtered_data_50MPa.txt');
+    data_100 = textread('../data/Karaman/filtered_data_100MPa.txt');
+    data_200 = textread('../data/Karaman/filtered_data_200MPa.txt');
+    data_300 = textread('../data/Karaman/filtered_data_300MPa.txt');
+    data_400 = textread('../data/Karaman/filtered_data_400MPa.txt');
+    data_500 = textread('../data/Karaman/filtered_data_500MPa.txt');
+    data_600 = textread('../data/Karaman/filtered_data_600MPa.txt');
 
     T_50 = data_50(:,1) + 273.15;
     T_100 = data_100(:,1) + 273.15;
@@ -267,11 +267,11 @@ if filename == "original"
     % - data_sigma(1): Temperature (in Celsius)
     % - data_sigma(2): Strain
     % - data_sigma(3): Stress
-    data_50 = textread('data/Original/filtered_data_50MPa.txt');
-    data_100 = textread('data/Original/filtered_data_100MPa.txt');
-    data_150 = textread('data/Original/filtered_data_150MPa.txt');
-    % data_172 = textread('data/Original/filtered_data_172MPa.txt');
-    data_200 = textread('data/Original/filtered_data_200MPa.txt');
+    data_50 = textread('../data/Original/filtered_data_50MPa.txt');
+    data_100 = textread('../data/Original/filtered_data_100MPa.txt');
+    data_150 = textread('../data/Original/filtered_data_150MPa.txt');
+    % data_172 = textread('../data/Original/filtered_data_172MPa.txt');
+    data_200 = textread('../data/Original/filtered_data_200MPa.txt');
 
     T_50 = data_50(:,1) + 273.15;
     T_100 = data_100(:,1) + 273.15;
@@ -452,10 +452,10 @@ if filename == "numerical_experimental_comparison"
     % - data_sigma(2): Strain
     % - data_sigma(3): Stress
     
-    data_F1 = textread('data/numerical_experimental_comparison/February27_Test1.txt');
-    data_F2 = textread('data/numerical_experimental_comparison/February28_Test2.txt');
-    data_M1 = textread('data/numerical_experimental_comparison/March8_2cpm.txt');
-    data_M2 = textread('data/numerical_experimental_comparison/March8_6cpm.txt');
+    data_F1 = textread('../data/numerical_experimental_comparison/February27_Test1.txt');
+    data_F2 = textread('../data/numerical_experimental_comparison/February28_Test2.txt');
+    data_M1 = textread('../data/numerical_experimental_comparison/March8_2cpm.txt');
+    data_M2 = textread('../data/numerical_experimental_comparison/March8_6cpm.txt');
 
     T_F1 = data_F1(:,1) + 273.15;
     T_F2 = data_F2(:,1) + 273.15;
