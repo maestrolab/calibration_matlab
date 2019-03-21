@@ -40,9 +40,9 @@ for i = 1:length(fields)
     field = char(fields(i));
     disp(field)
     disp(fields)
-    T.(field) = smooth(T.(field));
-    eps.(field) = smooth(eps.(field));
-    sigma.(field) = smooth(sigma.(field));
+    T.(field) = smooth(T.(field),0.01,'rloess');
+    eps.(field) = smooth(eps.(field),0.01,'rloess');
+    sigma.(field) = smooth(sigma.(field),0.01,'rloess');
 end
 experiment = [T, eps, sigma];
 end

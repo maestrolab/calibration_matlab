@@ -1,10 +1,16 @@
-function output = cost(x, lb, ub)
+function output = cost(x, lb, ub, MVF_0, to_plot)
 global initial_error
 global initial_delta_eps
 global experiment
 
+if nargin < 4
+    MVF_0 = 1.0;
+end
+if nargin < 5
+    to_plot = 'strain-stress';
+end
 % Assigning material properties
-P = property_assignment(x, lb, ub);
+P = property_assignment(x, lb, ub, MVF_0);
 % disp(P)
 % Elastic Prediction Check
 elastic_check = 'N';
@@ -28,15 +34,21 @@ try
     for i = 1:length(fields)
         field = char(fields(i));
         T = experiment(1).(field);
-        eps = experiment(2).(field) + P.eps_0;
-        sigma = experiment(3).(field) + P.sigma_0;
-        [eps_n, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma, P, ...
+        eps = experiment(2).(field);
+        sigma = experiment(3).(field);
+        sigma_n = experiment(3).(field) + P.sigma_0;
+        [eps_n, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma_n, P, ...
                                                                   elastic_check, ...
                                                                   integration_scheme);
 %         eps_n = eps_n - min(eps_n);
-
-        plot(T, eps, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-        plot(T, eps_n, '--','color', colors(i,:), 'linewidth',2)
+        
+        if ismember('temperature-strain', to_plot)
+            plot(T, eps, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+            plot(T, eps_n, '--','color', colors(i,:), 'linewidth',2)
+        elseif ismember('strain-stress', to_plot)
+            plot(eps, sigma, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+            plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
+        end
         if i == 1
             rmse = sqrt(sum((eps-eps_n).^2)/numel(eps));
             delta_eps = abs((max(eps) - min(eps)) - (max(eps_n) - min(eps_n)));

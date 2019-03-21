@@ -16,16 +16,17 @@ addpath('../phase_diagram/')
 % - x(6): A_f - A_s
 % - x(7): C_M
 % - x(8): C_A
-% - x(9): H_min
-% - x(10): H_max - H_min
-% - x(11): k
-% - x(12): n_1 
-% - x(13): n_2
-% - x(14): n_3
-% - x(15): n_4
-% - x(16): alpha_M
-% - x(17): alpha_A
-% - x(18): eps_0
+% - x(9): sigma_crit
+% - x(10): H_min
+% - x(11): H_max - H_min
+% - x(12): k
+% - x(13): n_1 
+% - x(14): n_2
+% - x(15): n_3
+% - x(16): n_4
+% - x(17): alpha_M
+% - x(18): alpha_A
+% - x(19): eps_0
 %alphas and sigma_crit are equal to zero in this problem
 % Initial guess (parameters calibrated from experiments)
 
@@ -42,6 +43,7 @@ addpath('../phase_diagram/')
 filepath = '../../data/test/';
 stress_in_MPa = true;
 reorder = false;
+MVF_0 = 0;
 to_plot = ['temperature-strain', 'strain-stress', 'temperature-MVF', 'stress-eps_t'];
 experiment = process_data(filepath, stress_in_MPa, reorder);
     
@@ -57,18 +59,18 @@ b = [];
 Aeq = [];
 beq = [];
 lb = [70e9, 0e9, ...
-     273.15 + 50, 0, 273.15 + 20, 0, 4E6, 4E6, ...
+     273.15 + 50, 0, 273.15 + 50, 0, 4E6, 4E6, ...
      0, 0.01, 0., 0.0001e-6,  ...
      0., 0., 0., 0., ...
      0., 0, ...
      0.0];
 
-ub = [100e9, 100e9, ...
-     273.15 + 100, 75., 273.15 + 150, 80., 14E6, 12E6, ...
+ub = [140e9, 140e9, ...
+     273.15 + 100, 75., 273.15 + 100, 40., 14E6, 12E6, ...
      300E6, 0.06, 0.06, 0.01e-6, ...
      1., 1., 1., 1., ...
      1e-5, 1e-5, ...
-     0.0001];
+     0.001];
 
 
 % Normalized x0
@@ -79,10 +81,8 @@ n_lb = zeros(size(lb));
 n_ub = ones(size(ub));
 
 % Define function to be optimized
-fun = @(x)cost(x, lb, ub);
-figure(1)
+fun = @(x)cost(x, lb, ub, MVF_0);
 nonlcon = [];
-hold on
 options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
     @optimplotfval,@optimplotfirstorderopt});
 x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
@@ -92,7 +92,7 @@ x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 %     'Display', 'iter', ...
 %     'EliteCount', 2);
 % x = ga(fun, 15, A, b, Aeq, beq, lb, ub, nonlcon, opts);
-P = property_assignment(x, lb, ub);
+P = property_assignment(x, lb, ub, MVF_0);
 disp(P)
 plot_optimized(P, to_plot)
 phase_diagram(P)

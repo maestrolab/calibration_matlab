@@ -1,33 +1,44 @@
-function [P] = property_assignment(x, lb, ub)
+function [P] = property_assignment(x, lb, ub, MVF_0)
+global experiment
 % Inputs:
 % - x(1): E_M
-% - x(2): E_M - E_A
+% - x(2): E_A
 % - x(3): M_s
 % - x(4): M_s - M_f
 % - x(5): A_s
 % - x(6): A_f - A_s
 % - x(7): C_M
 % - x(8): C_A
-% - x(9): H_min
-% - x(10): H_max - H_min
-% - x(11): k
-% - x(12): n_1 
-% - x(13): n_2
-% - x(14): n_3
-% - x(15): n_4
-% - x(16): alpha_M
-% - x(17): alpha_A
+% - x(9): sigma_crit
+% - x(10): H_min
+% - x(11): H_max - H_min
+% - x(12): k
+% - x(13): n_1 
+% - x(14): n_2
+% - x(15): n_3
+% - x(16): n_4
+% - x(17): alpha_M
+% - x(18): alpha_A
+% - x(19): eps_0
 %alphas and sigma_crit are equal to zero in this problem
 
+if nargin < 4
+    MVF_0 = 1.0;
+end
+
 % 
+T_0 = 0;
+fields = fieldnames(experiment(1));
+for i=1:length(fields)
+    field = char(fields(i));
+    if experiment(1).(field)(1) > T_0
+        T_0 = experiment(1).(field)(1);
+    end
+end
+
 % Denormalizing
 x = x.*(ub - lb) + lb;
 
-
-% plot(T_50,eps_50)
-% hold on
-% plot(T_100,eps_100)
-% plot(T_150,eps_150)
 
 % INPUT:
 % MATERIAL PARAMETERS (Structure: P)
@@ -78,6 +89,9 @@ P.delta=1e-5;
 % Calibration Stress
 P.sig_cal=200E6;
 
+% Initial MVF
+P.MVF_0 = MVF_0;
+
 % Tolerance for change in MVF during implicit iteration
 P.MVF_tolerance=1e-8;
 
@@ -85,24 +99,28 @@ P.MVF_tolerance=1e-8;
 if isnan(x(19))
     P.eps_0 = 0;
 else
-    P.eps_0 = 0;
+    P.eps_0 = x(19);
 end
 error = 999;
 iter_max = 1000;
 iter = 1;
 P.sigma_0 = 0;
-while (error > 1e-6 && iter < iter_max)
-    sigma_prev = P.sigma_0;
-    H_cur = H_cursolver(P.sigma_0,P.sig_crit,P.k,P.H_min,P.H_sat);
-    P.sigma_0 = P.E_M*(P.eps_0-H_cur);
-    error = abs(P.sigma_0 - sigma_prev);
-%     disp(P.sigma_0)
-%     disp(sigma_prev)
-    iter = iter + 1;
-end
-if iter >= iter_max
-    P.eps_0 = 0;
-    P.sigma_0 = 0;
+if P.MVF_0 == 1
+    while (error > 1e-6 && iter < iter_max)
+        sigma_prev = P.sigma_0;
+        H_cur = H_cursolver(P.sigma_0,P.sig_crit,P.k,P.H_min,P.H_sat);
+        P.sigma_0 = P.E_M*(P.eps_0-H_cur);
+        error = abs(P.sigma_0 - sigma_prev);
+    %     disp(P.sigma_0)
+    %     disp(sigma_prev)
+        iter = iter + 1;
+    end
+    if iter >= iter_max
+        P.eps_0 = 0;
+        P.sigma_0 = 0;
+    end
+elseif P.MVF_0 == 0
+    P.sigma_0 = P.E_A*P.eps_0;
 end
 end
 
