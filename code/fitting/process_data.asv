@@ -34,16 +34,9 @@ for i = 1:length(files)
 end
 
 %% Smooth the data
-fields = fieldnames(T);
-for i = 1:length(fields)
-    disp(i)
-    field = char(fields(i));
-    disp(field)
-    disp(fields)
-    T.(field) = smooth(T.(field));
-    eps.(field) = smooth(eps.(field));
-    sigma.(field) = smooth(sigma.(field));
-end
+[T, window] = smooth(T);
+[eps, window] = smooth(eps,);
+[sigma, window] = smoothdata(sigma,'gaussian');
 experiment = [T, eps, sigma];
 end
 

@@ -48,7 +48,10 @@ eps_t(1,1) = H_cur(1,1);
 eps(1,1) = H_cur(1,1) + sigma(1,1)/P.E_M;
 MVF(1,1) = 1.;
 E(1,1)=P.E_M;
-
+% disp('eps_t')
+% disp(eps_t(1,1))
+% disp('stress')
+% disp(sigma(1,1))
 % Array for number of iterations required for each load step
 increments = zeros((size(T,1)),1);
 for i = 2:size(T,1)
