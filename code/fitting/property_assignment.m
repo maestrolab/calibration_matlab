@@ -99,28 +99,8 @@ P.MVF_tolerance=1e-8;
 if isnan(x(19))
     P.eps_0 = 0;
 else
-    P.eps_0 = x(19);
+    P.eps_0 = 0;
 end
-error = 999;
-iter_max = 1000;
-iter = 1;
-P.sigma_0 = 0;
-if P.MVF_0 == 1
-    while (error > 1e-6 && iter < iter_max)
-        sigma_prev = P.sigma_0;
-        H_cur = H_cursolver(P.sigma_0,P.sig_crit,P.k,P.H_min,P.H_sat);
-        P.sigma_0 = P.E_M*(P.eps_0-H_cur);
-        error = abs(P.sigma_0 - sigma_prev);
-    %     disp(P.sigma_0)
-    %     disp(sigma_prev)
-        iter = iter + 1;
-    end
-    if iter >= iter_max
-        P.eps_0 = 0;
-        P.sigma_0 = 0;
-    end
-elseif P.MVF_0 == 0
-    P.sigma_0 = P.E_A*P.eps_0;
-end
+P = stable_initial_conditions(P);
 end
 

@@ -2,8 +2,9 @@ function [P] = stable_initial_conditions(P)
 error = 999;
 iter_max = 1000;
 iter = 1;
-P.sigma_0 = 0;
+
 if P.MVF_0 == 1
+    P.sigma_0 = 0;
     while (error > 1e-6 && iter < iter_max)
         sigma_prev = P.sigma_0;
         H_cur = H_cursolver(P.sigma_0,P.sig_crit,P.k,P.H_min,P.H_sat);
