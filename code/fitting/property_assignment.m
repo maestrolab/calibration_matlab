@@ -49,8 +49,8 @@ P.E_A = x(1) - x(2);
 % Austenite), (s:start,f:final)
 P.M_s = x(3);
 P.M_f = x(3) - x(4);
-P.A_s = x(5);
-P.A_f = x(6) + x(5);
+P.A_s = P.M_f + x(5);
+P.A_f = P.A_s + x(6);
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 
@@ -101,6 +101,7 @@ if isnan(x(19))
 else
     P.eps_0 = 0;
 end
-P = stable_initial_conditions(P);
+% P = stable_initial_conditions(P);
+P.sigma_0 = 0;
 end
 
