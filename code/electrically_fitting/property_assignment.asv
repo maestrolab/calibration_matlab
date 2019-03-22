@@ -2,24 +2,22 @@ function [P] = property_assignment(x, lb, ub, MVF_0)
 global experiment
 % Inputs:
 % - x(1): E_M
-% - x(2): E_A
+% - x(2): E_M - E_A
 % - x(3): M_s
 % - x(4): M_s - M_f
 % - x(5): A_s
 % - x(6): A_f - A_s
 % - x(7): C_M
 % - x(8): C_A
-% - x(9): sigma_crit
-% - x(10): H_min
-% - x(11): H_max - H_min
-% - x(12): k
-% - x(13): n_1 
-% - x(14): n_2
-% - x(15): n_3
-% - x(16): n_4
-% - x(17): alpha_M
-% - x(18): alpha_A
-% - x(19): eps_0
+% - x(9): H_min
+% - x(10): H_max - H_min
+% - x(11): k
+% - x(12): n_1 
+% - x(13): n_2
+% - x(14): n_3
+% - x(15): n_4
+% - x(16): alpha_M
+% - x(17): alpha_A
 %alphas and sigma_crit are equal to zero in this problem
 
 if nargin < 4
@@ -49,8 +47,8 @@ P.E_A = x(1) - x(2);
 % Austenite), (s:start,f:final)
 P.M_s = x(3);
 P.M_f = x(3) - x(4);
-P.A_s = P.M_f + x(5);
-P.A_f = P.A_s + x(6);
+P.A_s = x(5);
+P.A_f = x(6) + x(5);
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 
@@ -65,6 +63,7 @@ else
     P.H_min = x(10);
 end
 P.H_sat = x(10) + x(11);
+
 P.k = x(12);
 
 
@@ -100,7 +99,23 @@ if isnan(x(19))
 else
     P.eps_0 = 0;
 end
-% P = stable_initial_conditions(P);
+error = 999;
+iter_max = 1000;
+iter = 1;
 P.sigma_0 = 0;
+E = inv(inv(P.E_A)+P.MVF_0*(inv(P.E_M)-inv(P.E_A)));
+while (error > 1e-6 && iter < iter_max)
+    sigma_prev = P.sigma_0;
+    H_cur = H_cursolver(P.sigma_0,P.sig_crit,P.k,P.H_min,P.H_sat);
+    P.sigma_0 = P.E_M*(P.eps_0-H_cur);
+    error = abs(P.sigma_0 - sigma_prev);
+%     disp(P.sigma_0)
+%     disp(sigma_prev)
+    iter = iter + 1;
+end
+if iter >= iter_max
+    P.eps_0 = 0;
+    P.sigma_0 = 0;
+end
 end
 

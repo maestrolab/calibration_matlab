@@ -5,7 +5,7 @@ global experiment
 initial_error = 0;
 initial_delta_eps = 0;
 
-addpath('../temperature_driven/')
+addpath('../electrically_driven/')
 addpath('../phase_diagram/')
 % Inputs:
 % - x(1): E_M

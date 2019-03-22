@@ -5,28 +5,27 @@ global experiment
 initial_error = 0;
 initial_delta_eps = 0;
 
-addpath('../temperature_driven/')
+addpath('../main/')
 addpath('../phase_diagram/')
 % Inputs:
 % - x(1): E_M
 % - x(2): E_A
 % - x(3): M_s
 % - x(4): M_s - M_f
-% - x(5): A_s - M_f
+% - x(5): A_s
 % - x(6): A_f - A_s
 % - x(7): C_M
 % - x(8): C_A
-% - x(9): sigma_crit
-% - x(10): H_min
-% - x(11): H_max - H_min
-% - x(12): k
-% - x(13): n_1 
-% - x(14): n_2
-% - x(15): n_3
-% - x(16): n_4
-% - x(17): alpha_M
-% - x(18): alpha_A
-% - x(19): eps_0
+% - x(9): H_min
+% - x(10): H_max - H_min
+% - x(11): k
+% - x(12): n_1 
+% - x(13): n_2
+% - x(14): n_3
+% - x(15): n_4
+% - x(16): alpha_M
+% - x(17): alpha_A
+% - x(18): eps_0
 %alphas and sigma_crit are equal to zero in this problem
 % Initial guess (parameters calibrated from experiments)
 
@@ -48,7 +47,7 @@ to_plot = ['temperature-strain', 'strain-stress', 'temperature-MVF', 'stress-eps
 experiment = process_data(filepath, stress_in_MPa, reorder);
     
 x0 = [91.01E9, 91.01E9 - 44.93E9, ...
-     273.15 + 62.38, 62.38 - 51.69, 40, 83.49 - 70.96, 8.15e6, 7.64E6,...
+     273.15 + 62.38, 62.38 - 51.69, 273.15 + 70.96, 83.49 - 70.96, 8.15e6, 7.64E6,...
      0, 0.03878, 0.06272 - 0.03878, 0.00359e-6,  ...
      0.2, 0.2, 0.2, 0.3, ...
      1e-6, 1e-6, ...
@@ -58,15 +57,15 @@ A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [50e9, 0e9, ...
-     273.15 + 10, 0, 0, 0, 4E6, 4E6, ...
+lb = [70e9, 0e9, ...
+     273.15 + 50, 0, 273.15 + 50, 0, 4E6, 4E6, ...
      0, 0.01, 0., 0.0001e-6,  ...
      0., 0., 0., 0., ...
      0., 0, ...
      0.0];
 
-ub = [140e9, 140e9, ...
-     273.15 + 100, 75., 150, 150., 20E6, 20E6, ...
+ub = [100e9, 100e9, ...
+     273.15 + 100, 75., 273.15 + 100, 40., 14E6, 12E6, ...
      300E6, 0.06, 0.06, 0.01e-6, ...
      1., 1., 1., 1., ...
      1e-5, 1e-5, ...
@@ -83,6 +82,7 @@ n_ub = ones(size(ub));
 % Define function to be optimized
 fun = @(x)cost(x, lb, ub, MVF_0);
 nonlcon = [];
+hold on
 options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
     @optimplotfval,@optimplotfirstorderopt});
 x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);

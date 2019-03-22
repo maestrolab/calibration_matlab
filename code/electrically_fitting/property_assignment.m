@@ -19,7 +19,8 @@ global experiment
 % - x(16): n_4
 % - x(17): alpha_M
 % - x(18): alpha_A
-% - x(19): eps_0
+% - x(19): rho_E
+% - x(20): T_ambient
 %alphas and sigma_crit are equal to zero in this problem
 
 if nargin < 4
@@ -40,11 +41,11 @@ end
 x = x.*(ub - lb) + lb;
 
 
-% INPUT:
-% MATERIAL PARAMETERS (Structure: P)
+%% SMA properties
 % Young's Modulus for Austenite and Martensite 
-P.E_M = x(1);
-P.E_A = x(1) - x(2);
+P.E_A = x(1);
+P.E_M = x(1) - x(2);
+
 % Transformation temperatures (M:Martensite, A:
 % Austenite), (s:start,f:final)
 P.M_s = x(3);
@@ -67,12 +68,7 @@ end
 P.H_sat = x(10) + x(11);
 P.k = x(12);
 
-
-% Coefficient of thermal expansion
-P.alpha = 0.;
-
 % Smoothn hardening parameters 
-% NOTE: smoothness parameters must be 1 for explicit integration scheme
 P.n1 = x(13);
 P.n2 = x(14);
 P.n3 = x(15);
@@ -82,25 +78,36 @@ P.n4 = x(16);
 P.alpha_M = x(17);
 P.alpha_A = x(18);
 
+%% Energy Coefficients
+% Mass density
+P.rho= 6500; %kg/m^3
+% Specific Heat
+P.c= 837.36;
+% Heat convection coefficient
+P.h = 1; % 1 is True and 0 is False
+% electrical resistance
+P.rho_E =  x(19);
+% Ambient Temperature (Initial Temperature??)
+P.T_ambient = x(20);
+
+%% Model Geometry
+% d: Diameter of considered 1D model
+P.d = 0.4e-3;
+
+%% Initial conditions
+% initial stress
+P.sigma_0 = 0;
+% initial MVF
+P.MVF_0 = MVF_0;
+% initial transformation strain
+P.eps_t_0 = 0;
+
+%% Algorithm parameters
 % Algorithmic delta for modified smooth hardening function
 P.delta=1e-5;
-
 % Calibration Stress
 P.sig_cal=200E6;
-
-% Initial MVF
-P.MVF_0 = MVF_0;
-
 % Tolerance for change in MVF during implicit iteration
 P.MVF_tolerance=1e-8;
-
-% Guessing an initial stress or strain
-if isnan(x(19))
-    P.eps_0 = 0;
-else
-    P.eps_0 = 0;
-end
-% P = stable_initial_conditions(P);
-P.sigma_0 = 0;
 end
 
