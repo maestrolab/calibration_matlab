@@ -24,69 +24,26 @@ end
 % Elastic Prediction Check
 elastic_check = 'N';
 
-% Integration Scheme
-integration_scheme = 'I';
+% Positive stress?
+stress_flag = true;
 
 fields = fieldnames(experiment(1));
 for i = 1:length(fields)
     field = char(fields(i));
-    T = experiment(1).(field);
-    eps = experiment(2).(field) + P.eps_0;
-    sigma = experiment(3).(field) + P.sigma_0;
+    t = experiment(1).time;
+    eps = experiment(1).strain;
+    sigma = experiment(1).stress;
+    current = experiment(1).power;
     
-    disp(sigma(1))
-    [eps_n, MVF, eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma, P, ...
-                                                              elastic_check, ...
-                                                              integration_scheme);
+    [sigma_n,MVF,T,eps_t, ...
+        E,MVF_r eps_t_r, ...
+        h_convection, pi_t, eps ] = Full_Model_TC( t, eps, current, P, ...
+                                                   elastic_check, ...
+                                                   stress_flag);
     sigma = sigma / 1e6;
-    if ismember('temperature-strain', to_plot)
-        figure()
-        box on
-        hold on
-        plot(T, eps, 'b', 'linewidth',2)
-        plot(T, eps_n, '--r', 'linewidth',2)
-        xlabel('Temperature (K)')
-        ylabel('Strain (m/m)')
-        title(strcat(num2str(round(mean(sigma),0)), ' MPa'))
-        legend('Experiment','Calibrated')
-    end
-    if ismember('strain-stress', to_plot)
-        figure()
-        box on
-        hold on
-        plot(eps, sigma,  'b', 'linewidth',2)
-        plot(eps_n, sigma, '--r', 'linewidth',2)
-        xlabel('Strain (m/m)')
-        ylabel('Stress (MPa)')
-        legend('Experiment','Calibrated')
-    end
-    if ismember('temperature-MVF', to_plot)
-        figure()
-        box on
-        hold on
-        plot(MVF, 'k', 'linewidth',2)
-        xlabel('Iteration')
-        ylabel('matensitic Volume Fraction')
-        legend('Experiment','Calibrated')
-    end
-    if ismember('stress-eps_t', to_plot)
-        figure()
-        box on
-        hold on
-        plot(eps_t, 'k', 'linewidth',2)
-        xlabel('Iteration')
-        ylabel('Transformation Strain (m/m)')
-        legend('Experiment','Calibrated')
-    end
-    if ismember('temperature-stress', to_plot)
-        figure()
-        box on
-        hold on
-        plot(T, sigma, 'k', 'linewidth',2)
-        xlabel('Temperature (K)')
-        ylabel('Stress (MPa)')
-        legend('Experiment','Calibrated')
-    end
+    sigman = sigma_n / 1e6;
+    plot(eps, sigma, 'b', 'linewidth',2, 'DisplayName', field);
+    plot(eps, sigma_n, 'r', 'linewidth',2)
 end
 
 end

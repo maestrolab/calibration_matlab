@@ -31,12 +31,12 @@ try
     clf(1);
     hold on
 
-    for i = 1:length(fields)
+    for i = 1:length(experiment)
         field = char(fields(i));
-        t = experiment(1).(field);
-        eps = experiment(2).(field);
-        sigma = experiment(3).(field);
-        current = experiment(4).(field);
+        t = experiment(1).time;
+        eps = experiment(1).strain;
+        sigma = experiment(1).stress;
+        current = experiment(1).power;
         [sigma_n,MVF,T,eps_t, ...
             E,MVF_r eps_t_r, ...
             h_convection, pi_t, eps ] = Full_Model_TC( t, eps, current, P, ...

@@ -27,16 +27,6 @@ if nargin < 4
     MVF_0 = 1.0;
 end
 
-% 
-T_0 = 0;
-fields = fieldnames(experiment(1));
-for i=1:length(fields)
-    field = char(fields(i));
-    if experiment(1).(field)(1) > T_0
-        T_0 = experiment(1).(field)(1);
-    end
-end
-
 % Denormalizing
 x = x.*(ub - lb) + lb;
 
