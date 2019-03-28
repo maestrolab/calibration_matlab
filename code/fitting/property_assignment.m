@@ -98,9 +98,9 @@ P.MVF_tolerance=1e-8;
 if isnan(x(19))
     P.eps_0 = 0;
 else
-    P.eps_0 = 0;
+    P.eps_0 = x(19);
 end
-% P = stable_initial_conditions(P);
-P.sigma_0 = 0;
+P = stable_initial_conditions(P);
+% P.sigma_0 = 0;
 end
 

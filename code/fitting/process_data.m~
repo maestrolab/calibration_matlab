@@ -17,11 +17,9 @@ for i = 1:length(files)
     disp(strcat(filepath, field))
     data.(field) = textread(strcat(filepath, filename));
     T.(field) = data.(field)(:,1) + 273.15;
-    eps.(field) = data.(field)(:,2);
     if tare_strain
-        eps.(field) = eps.(field) - min(eps.(field));
-    end
-
+    eps.(field) = data.(field)(:,2);
+%     eps.(field) = eps.(field) - min(eps.(field));
     if stress_in_MPa
         sigma.(field) = 1e6*data.(field)(:,3);
     else
