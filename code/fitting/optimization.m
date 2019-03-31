@@ -41,7 +41,8 @@ addpath('../phase_diagram/')
 
 
 % filepath = '../../data/test/';
-filepath = '../../data/Karaman_test/';
+% filepath = '../../data/Karaman_test/';
+filepath = '../../data/Karaman/';
 stress_in_MPa = true;
 reorder = false;
 tare_strain = true;
