@@ -1,4 +1,4 @@
-function [experiment] = process_data(filepath, stress_in_MPa, reorder, tare_strain)
+function [experiment] = process_data(filepath, stress_in_MPa, reorder)
 %Read data from experiments. For constant stress sigma:
 % - data_sigma(1): Temperature (in Celsius)
 % - data_sigma(2): Strain
@@ -6,7 +6,6 @@ function [experiment] = process_data(filepath, stress_in_MPa, reorder, tare_stra
 if nargin < 2
     stress_in_MPa = false;
     reorder = false;
-    tare_strain = false;
 end
 
 files = dir(strcat(filepath, '*.txt'));
@@ -18,10 +17,7 @@ for i = 1:length(files)
     data.(field) = textread(strcat(filepath, filename));
     T.(field) = data.(field)(:,1) + 273.15;
     eps.(field) = data.(field)(:,2);
-    if tare_strain
-        eps.(field) = eps.(field) - min(eps.(field));
-    end
-
+%     eps.(field) = eps.(field) - min(eps.(field));
     if stress_in_MPa
         sigma.(field) = 1e6*data.(field)(:,3);
     else
