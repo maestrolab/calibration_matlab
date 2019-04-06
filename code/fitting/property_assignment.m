@@ -96,12 +96,14 @@ P.MVF_tolerance=1e-8;
 
 % Guessing an initial stress or strain
 if isnan(x(19))
-    P.eps_0 = x(19);
+    P.eps_0 = 0;
     % P.eps_t_0 = x(19);
 else
-    P.eps_0 = 0; %this number needs to be changes, if you put "0", it will set the minimum to "0" for the eps.
+    P.eps_0 = x(19); %this number needs to be changes, if you put "0", it will set the minimum to "0" for the eps.
     % P.eps_t_0 = 0;
 end
+
+% P.eps_0 = 0 + P.alpha_A*;
 
 P = stable_initial_conditions(P);
 % P.sigma_0 = 0;

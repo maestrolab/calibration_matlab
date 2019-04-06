@@ -63,8 +63,8 @@ try
         initial_error = rmse;
         initial_delta_eps = delta_eps;
     end
-    output = (rmse/initial_error + delta_eps/initial_delta_eps)/2.;
-%    output = rmse/initial_error ;
+%    output = (rmse/initial_error + delta_eps/initial_delta_eps)/2.;
+    output = rmse/initial_error ;
 %     disp('output')
 %     disp(output)
 catch
