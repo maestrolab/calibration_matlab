@@ -20,6 +20,7 @@ global experiment
 % - x(17): alpha_M
 % - x(18): alpha_A
 % - x(19): eps_0
+
 %alphas and sigma_crit are equal to zero in this problem
 
 if nargin < 4
@@ -96,11 +97,13 @@ P.MVF_tolerance=1e-8;
 
 % Guessing an initial stress or strain
 
-if isnan(x(19))
-    P.eps_0 = x(19);
-else
-    P.eps_0 = 0;
-end
+% if isnan(x(19))
+%     P.eps_0 = x(19);
+% else
+%     P.eps_0 = 0;
+% end
+
+P.eps_0 = x(19);
 
 % P = stable_initial_conditions(P);
 P.sigma_0 = 0;
