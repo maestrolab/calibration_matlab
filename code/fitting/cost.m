@@ -1,14 +1,19 @@
-function output = cost(x, lb, ub, MVF_0, to_plot)
+function output = cost(x, lb, ub, MVF_0)
 global initial_error
 global initial_delta_eps
 global experiment
+
+Const_Stress = true;
 
 if nargin < 4
     MVF_0 = 1.0;
 end
 if nargin < 5
-    % to_plot = 'strain-stress';
-    to_plot = 'temperature-strain';
+    if Const_Stress == true
+        to_plot = 'temperature-strain';
+    else
+        to_plot = 'strain-stress';
+    end
 end
 % Assigning material properties
 P = property_assignment(x, lb, ub, MVF_0);
