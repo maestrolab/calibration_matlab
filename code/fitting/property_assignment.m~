@@ -29,6 +29,7 @@ end
 
 % 
 T_0 = 0;
+sigma_0 = experiment(3,`
 fields = fieldnames(experiment(1));
 for i=1:length(fields)
     field = char(fields(i));
@@ -98,10 +99,14 @@ P.MVF_tolerance=1e-8;
 % Guessing an initial stress or strain
 
 if isnan(x(19))
-    P.eps_0 = 0;
+    P.eps_0 = H_cur(1,1) + sigma(1,1)/P.E_M;
 else
-    P.eps_0 = x(19);
+    P.eps_0 = 0;
 end
 
+% P.eps_0 = 0;
+
+% P = stable_initial_conditions(P);
+% P.sigma_0 = 0;
 end
 

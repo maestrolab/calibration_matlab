@@ -1,19 +1,13 @@
-function output = cost(x, lb, ub, MVF_0)
+function output = cost(x, lb, ub, MVF_0, to_plot)
 global initial_error
 global initial_delta_eps
 global experiment
-
-Const_Stress = true;
 
 if nargin < 4
     MVF_0 = 1.0;
 end
 if nargin < 5
-    if Const_Stress == true
-        to_plot = 'temperature-strain';
-    else
-        to_plot = 'strain-stress';
-    end
+    to_plot = ['stress-strain'];
 end
 % Assigning material properties
 P = property_assignment(x, lb, ub, MVF_0);
@@ -40,8 +34,8 @@ try
     for i = 1:length(fields)
         field = char(fields(i));
         T = experiment(1).(field);
-        eps = experiment(2).(field) + P.eps_0;
-        sigma = experiment(3).(field) + P.sigma_0;
+        eps = experiment(2).(field);
+        sigma = experiment(3).(field);
         [eps_n, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma, P, ...
                                                                   elastic_check, ...
                                                                   integration_scheme);

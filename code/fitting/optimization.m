@@ -7,6 +7,7 @@ initial_delta_eps = 0;
 
 addpath('../temperature_driven/')
 addpath('../phase_diagram/')
+
 % Inputs:
 % - x(1): E_M
 % - x(2): E_A
@@ -40,11 +41,11 @@ addpath('../phase_diagram/')
 %      .2215, .2059, .2040, .2856];
 
 
-% filepath = '../../data/test/';
-filepath = '../../data/Karaman_test/';
+filepath = '../../data/test/';
+% filepath = '../../data/Karaman_test/';
 stress_in_MPa = true;
-reorder = false;
-MVF_0 = 0;
+reorder = true; % true for karaman
+MVF_0 = 1;
 % Const_Stress = true; % actual variable is currently in 'cost.m'
 
 to_plot = ['temperature-strain', 'strain-stress', 'temperature-MVF', 'stress-eps_t'];
@@ -95,7 +96,7 @@ ub = [100e9, 60e9, ...
      300E6, 0.06, 0.06, 0.01e-6, ...
      1., 1., 1., 1., ...
      1e-4, 1e-4, ...
-    1];
+    .06];
 
 
 % Normalized x0
