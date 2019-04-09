@@ -41,8 +41,8 @@ addpath('../phase_diagram/')
 %      .2215, .2059, .2040, .2856];
 
 
-filepath = '../../data/test/';
-% filepath = '../../data/Karaman_test/';
+filepath = '../../data/single_test/';
+% filepath = '../../data/Karaman/';
 stress_in_MPa = true;
 reorder = true; % true for karaman
 MVF_0 = 1;
