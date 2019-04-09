@@ -7,7 +7,7 @@ if nargin < 4
     MVF_0 = 1.0;
 end
 if nargin < 5
-    to_plot = ['stress-strain']; %'temperature-strain'
+    to_plot = ['temperature-strain']; % ['stress-strain'];
 end
 % Assigning material properties
 P = property_assignment(x, lb, ub, MVF_0);
