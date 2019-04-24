@@ -25,25 +25,60 @@ end
 elastic_check = 'N';
 
 % Positive stress?
-stress_flag = true;
+stress_flag = false;
 
-fields = fieldnames(experiment(1));
-for i = 1:length(fields)
-    field = char(fields(i));
-    t = experiment(1).time;
-    eps = experiment(1).strain;
-    sigma = experiment(1).stress;
-    current = experiment(1).power;
+for i = 1:length(experiment)
+    t = experiment(i).time;
+    eps = experiment(i).strain;
+    sigma = experiment(i).stress;
+    current = experiment(i).power;
     
     [sigma_n,MVF,T,eps_t, ...
         E,MVF_r eps_t_r, ...
-        h_convection, pi_t, eps ] = Full_Model_TC( t, eps, current, P, ...
+        h_convection, pi_t, eps_n ] = Full_Model_TC( t, eps, current, P, ...
                                                    elastic_check, ...
                                                    stress_flag);
     sigma = sigma / 1e6;
-    sigman = sigma_n / 1e6;
-    plot(eps, sigma, 'b', 'linewidth',2, 'DisplayName', field);
-    plot(eps, sigma_n, 'r', 'linewidth',2)
+    sigma_n = sigma_n / 1e6;
+    figure()
+    hold on
+    box on
+    plot(eps, sigma, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    plot(eps_n, sigma_n, 'r', 'linewidth',2, 'DisplayName', 'Model');
+    legend('Location','best')
+    xlabel('Strain (m/m)')
+    ylabel('Stress (MPa)')
+    
+    figure()
+    hold on
+    box on
+    plot(t, MVF, 'b', 'linewidth',2, 'DisplayName', 'MVF');
+    plot(t, eps_t, 'r', 'linewidth',2, 'DisplayName', 'eps_t');
+    legend('Location','best')
+
+    figure()
+    hold on
+    box on
+    plot(t, sigma, 'k', 'linewidth',2, 'DisplayName', 'Experiment');
+    plot(t, sigma_n, '--k', 'linewidth',2, 'DisplayName', 'Model');
+    legend('Location','best')
+
+    figure()
+    hold on
+    box on
+    plot(t, T, 'k', 'linewidth',2, 'DisplayName', 'Temperature');
+    legend('Location','best')
+
+        figure()
+    hold on
+    box on
+    plot(t, current, 'k', 'linewidth',2, 'DisplayName', 'Current');
+    legend('Location','best')
+    
+    figure()
+    hold on
+    plot(T, sigma, 'k', 'linewidth',2, 'DisplayName', 'Experimental');
+    plot(T, sigma_n, '--k', 'linewidth',2, 'DisplayName', 'Model');
 end
 
 end

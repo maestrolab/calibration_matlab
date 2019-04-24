@@ -79,6 +79,7 @@ P.h = 1; % 1 is True and 0 is False
 P.rho_E =  x(19);
 % Ambient Temperature (Initial Temperature??)
 P.T_ambient = x(20);
+P.T_0 = x(21);
 
 %% Model Geometry
 % d: Diameter of considered 1D model

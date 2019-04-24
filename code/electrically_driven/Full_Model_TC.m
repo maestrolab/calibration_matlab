@@ -29,7 +29,7 @@ TP.Y_0_t = TP.rho_delta_s0/2*(P.M_s-P.A_f)-TP.a3;
 % Arrays of output variables
 % T: Temperature
 T = zeros((size(t,1)),1);
-T(1,1)=P.T_ambient;
+T(1,1)=P.T_0;
 % H_cur: Current maximum transformational strain
 H_cur = zeros((size(t,1)),1);
 % eps_t: Transformational Strain

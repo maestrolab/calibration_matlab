@@ -1,18 +1,20 @@
-function [] = phase_diagram(P)
+function [] = phase_diagram(P, max_sigma)
 global experiment
 
-max_sigma = 0;
-fields = fieldnames(experiment(1));
-for i=1:length(fields)
-    field = char(fields(i));
-    if max(experiment(3).(field)) > max_sigma
-        max_sigma = max(experiment(3).(field));
+if nargin < 2
+    max_sigma = 0;
+    fields = fieldnames(experiment(1));
+    for i=1:length(fields)
+        field = char(fields(i));
+        if max(experiment(3).(field)) > max_sigma
+            max_sigma = max(experiment(3).(field));
+        end
     end
 end
 sigma = linspace(0, max_sigma);
 
 % Current transformation strain at calibration stress
-H_cur_cal = H_cursolver(P.sig_cal, P.sig_crit,P.k,P.H_min,P.H_sat)
+H_cur_cal = H_cursolver(P.sig_cal, P.sig_crit,P.k,P.H_min,P.H_sat);
 
 % Partial Derivative of H_cur at calibration stress (dH_cur)
 dH_cur=partial_Hcur_sigma(P.sig_cal,P.sig_crit,P.k,P.H_sat,P.H_min);
@@ -52,18 +54,15 @@ for i = 1:length(sigma)
 end
 
 box on 
-plot(T_fwd_0,sigma/(1e6),'b', 'LineWidth',2)
-plot(T_fwd_1,sigma/(1e6),'--b', 'LineWidth',2)
-plot(T_rev_0,sigma/(1e6),'--r', 'LineWidth',2)
-plot(T_rev_1,sigma/(1e6),'r', 'LineWidth',2)
+plot(T_fwd_0,sigma/(1e6),'b', 'LineWidth',2, 'DisplayName', '\Phi_{fwd, \xi = 0}')
+plot(T_fwd_1,sigma/(1e6),'--b', 'LineWidth',2, 'DisplayName', '\Phi_{fwd, \xi = 1}')
+plot(T_rev_0,sigma/(1e6),'--r', 'LineWidth',2, 'DisplayName', '\Phi_{rev, \xi = 0}')
+plot(T_rev_1,sigma/(1e6),'r', 'LineWidth',2, 'DisplayName', '\Phi_{rev, \xi = 1}')
 xlabel('Temperature (K)')
 ylabel('Stress (MPa)')
 % title('SMA Model Phase Diagram')
 set(gca,'FontName','Times New Roman','fontsize', 14,'linewidth',1.15)
 set(gca,'XMinorTick','on','YMinorTick','on')
 set(gca,'ticklength',3*get(gca,'ticklength'))
-legend('\Phi_{fwd, \xi = 0}', ...
-       '\Phi_{fwd, \xi = 1}', ...
-       '\Phi_{rev,  \xi = 0}',...
-       '\Phi_{rev,  \xi = 1}','Location','best')
+legend('Location','best')
 end

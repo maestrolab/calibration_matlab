@@ -45,12 +45,16 @@ function [matrix, all_data] = retrieve_data(period, duty_list, phase_list, ...
             work = calculate_work(data.stress, data.strain, 1., 1.)/n_cycles;
             
             % Eliminate all data that is not relevant to last 1.5 cycle
-            index_start = ceil(.75*length(data.time));
-            index_end = ceil(.95*length(data.time));
+            index_start = ceil(.35*length(data.time))+4;
+            index_end = ceil(.95*length(data.time))+1;
             fields = fieldnames(data);
             for j=1:length(fields)
                 field = char(fields(j));
-                data.(field) = data.(field)(index_start:index_end);
+                if strcmp(field, 'power') || strcmp(field, 'time')
+                    data.(field) = data.(field)(index_start:index_end);
+                else
+                    data.(field) = data.(field)(index_start:index_end);
+                end
             end
             data.stress = data.stress - data.stress(1);
             % Calculate cycle intervals (strain == 0)

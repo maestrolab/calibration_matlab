@@ -16,7 +16,7 @@ P = property_assignment(x, lb, ub, MVF_0);
 elastic_check = 'N';
 
 % Only positive stress?
-stress_flag = true;
+stress_flag = false;
 
 try
     fields = fieldnames(experiment(1));
@@ -39,17 +39,18 @@ try
         current = experiment(1).power;
         [sigma_n,MVF,T,eps_t, ...
             E,MVF_r eps_t_r, ...
-            h_convection, pi_t, eps ] = Full_Model_TC( t, eps, current, P, ...
+            h_convection, pi_t, eps_n ] = Full_Model_TC( t, eps, current, P, ...
                                                        elastic_check, ...
                                                        stress_flag);
 
 %         eps_n = eps_n - min(eps_n);
         plot(eps, sigma, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-        plot(eps, sigma_n, '--','color', colors(i,:), 'linewidth',2)
+        plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
+        
         if i == 1
-            rmse = sqrt(sum((sigma-sigma_n).^2)/numel(sigma));
+            rmse = sqrt(sum(sum(([eps, sigma] - [eps_n, sigma_n]).^2))/numel(sigma));
         else
-            rmse = rmse + sqrt(sum((sigma-sigma_n).^2)/numel(sigma));
+            rmse = rmse + sqrt(sum(sum(([eps, sigma] - [eps_n, sigma_n]).^2))/numel(sigma));
         end
     end
     legend();
