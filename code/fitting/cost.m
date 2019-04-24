@@ -7,7 +7,7 @@ if nargin < 4
     MVF_0 = 1.0;
 end
 if nargin < 5
-    to_plot = 'strain-stress';
+    to_plot = ['stress-strain']; %['temperature-strain']; % ['stress-strain'];
 end
 % Assigning material properties
 P = property_assignment(x, lb, ub, MVF_0);
@@ -34,8 +34,8 @@ try
     for i = 1:length(fields)
         field = char(fields(i));
         T = experiment(1).(field);
-        eps = experiment(2).(field) + P.eps_0;
-        sigma = experiment(3).(field) + P.sigma_0;
+        eps = experiment(2).(field);
+        sigma = experiment(3).(field);
         [eps_n, MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma, P, ...
                                                                   elastic_check, ...
                                                                   integration_scheme);

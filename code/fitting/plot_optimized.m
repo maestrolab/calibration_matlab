@@ -31,13 +31,14 @@ fields = fieldnames(experiment(1));
 for i = 1:length(fields)
     field = char(fields(i));
     T = experiment(1).(field);
-    eps = experiment(2).(field) + P.eps_0;
-    sigma = experiment(3).(field) + P.sigma_0;
+    eps = experiment(2).(field); % + P.eps_0;
+    sigma = experiment(3).(field); % + P.sigma_0;
     
     disp(sigma(1))
     [eps_n, MVF, eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(T, sigma, P, ...
                                                               elastic_check, ...
                                                               integration_scheme);
+    disp(eps_n(1:10))
     sigma = sigma / 1e6;
     if ismember('temperature-strain', to_plot)
         figure()
