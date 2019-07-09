@@ -30,9 +30,9 @@ addpath('../phase_diagram/')
 % - x(20): T_ambient
 
 %% Process experimental data
-period_list = [21];
+period_list = [25];
 duty_list = [50];
-phase_list = [25];
+phase_list = [0];
 
 n_cycles = 5;
 
