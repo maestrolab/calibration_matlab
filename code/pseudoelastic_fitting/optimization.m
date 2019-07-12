@@ -7,37 +7,27 @@ global stress_pseudo
 global strain_pseudo
 initial_error = 0;
 initial_delta_eps = 0;
+addpath('../temperature_driven/')
 
-addpath('../electrically_driven/')
-addpath('../phase_diagram/')
-
-P = load('../pseudoelastic_fitting/pseudo_calibrated.mat');
-P = P.P;
 warning('off')
 % Inputs:
-% - x(1): M_s
-% - x(2): M_s - M_f
-% - x(3): A_s
-% - x(4): A_f - A_s
-% - x(5): C_M
-% - x(6): C_A
-% - x(7): H_max - H_min
-% - x(8): k
-% - x(9): alpha_M
-% - x(10): alpha_A
-% - x(11): rho_E
-% - x(12): T_ambient
-% - x(13): T_0
-% - x(14): sigma_0
-% - x(15): MVF_0
-% - x(16): eps_t_0
-
+% - x(1): E_M
+% - x(2): E_A
+% - x(3): M_s
+% - x(4): M_s - M_f
+% - x(5): A_s
+% - x(6): A_f - A_s
+% - x(7): C_M
+% - x(8): C_A
+% - x(10): H_min
+% - x(11): H_max - H_min
+% - x(12): k
+% - x(13): n_1 
+% - x(14): n_2
+% - x(15): n_3
+% - x(16): n_4
 %% Process experimental data
-period_list = [25];
-duty_list = [50];
-phase_list = [-25];
-
-n_cycles = 3;
+n_cycles = 5;
 
 % Reading Excel File 
 filename = '../../data/artificial_muscle/pseudoelastic_40C.xlsx';
@@ -47,55 +37,35 @@ strain_pseudo  = 1e-2*xlsread(filename,'L7:L2093');
 temperature_pseudo = temperature_pseudo(1:2052);
 stress_pseudo = stress_pseudo(1:2052);
 strain_pseudo = strain_pseudo(1:2052);
+
 % Filtering Data 
 temperature_pseudo = smooth(temperature_pseudo, 0.1,'loess');
 stress_pseudo = smooth(stress_pseudo, 0.1,'loess');
 strain_pseudo = smooth(strain_pseudo, 0.1,'loess'); 
 stress_pseudo = stress_pseudo - stress_pseudo(1,1);
 strain_pseudo = strain_pseudo - strain_pseudo(1,1);
-n_periods = length(period_list);
-n_duty = length(duty_list);
-n_phase = length(phase_list);
-n_combinations = n_periods*n_duty*n_phase;
-DOE_matrix = zeros(n_combinations, 5);
 
-% Extracting data
-directory = '../../data/artificial_muscle_electric/';
-                  
-for i = 1:n_periods
-   period = period_list(i);
-   [DOE_matrix((i-1)*n_duty*n_phase+1 : i*n_duty*n_phase,:),temp] = ...
-       retrieve_data(period, duty_list, phase_list, n_cycles, ...
-       directory);
-   data = temp;
-end
-
-t = data(1).time - min(data(1).time);
-eps = data(1).strain;
-sigma = data(1).stress;
-current = data(1).power;
-experiment = data;
 
 %% Set up the problem
 MVF_0 = 0;    
-x0 = [0, 0, 0, 0, 0, 0, 0, 0, ...
-     1e-6, 1e-6, ...
-     82e-2, 300., 300.]; %...
-%      100e6, 0.5, 0];
+x0 = [0, 0, 0.025,  300, .05,.1, ...
+      8.15e6, 7.64E6,...
+      0, 0.03, 0.00359e-6,  ...
+      0.8, 0.8, 0.8, 0.8];
 
 A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [-0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1, -0.1,...
-     0., 0,...
-     10e-3, 290., 290.]; %, ...
-%      0, 0, 0];
+lb = [-.1, -.1, 0, 260, 0, 0,...
+     4E6, 4E6, ...
+     0, 0.02, 0.0001e-6,  ...
+     0.01, 0.01, 0.01, 0.01];
 
-ub = [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1,...
-     1e-5, 1e-5, ...
-     200e-2, 310., 350.]; %, ...
-%      500e6, 1, 0.06];
+ub = [ .1,  .1,  .04, 310, .2,  .04,...
+     20E6, 20E6, ...
+     0.03, 0.06, 0.01e-6, ...
+     1., 1., 1., 1.];
 
 
 % Normalized x0
@@ -106,7 +76,7 @@ n_lb = zeros(size(lb));
 n_ub = ones(size(ub));
 
 % Define function to be optimized
-fun = @(x)cost(x, lb, ub, P, MVF_0);
+fun = @(x)cost(x, lb, ub, MVF_0);
 nonlcon = [];
 options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
     @optimplotfval,@optimplotfirstorderopt});
@@ -117,9 +87,12 @@ options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEval
 
 x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 % x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
-P = property_assignment(x, lb, ub, P, MVF_0);
+P = property_assignment(x, lb, ub, true);
 disp(P)
 plot_optimized(P)
-phase_diagram(P, max(sigma))
+figure(3)
+phase_diagram(P, max(stress_pseudo))
+plot(temperature_pseudo, stress_pseudo/1e6, 'k')
+save('pseudo_calibrated','P')
 
 

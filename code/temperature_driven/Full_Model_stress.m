@@ -44,7 +44,7 @@ Phi_rev = zeros((size(T,1)),1);
 
 % Initialize outputs
 H_cur(1,1) = H_cursolver(sigma(1,1),P.sig_crit,P.k,P.H_min,P.H_sat);
-P = stable_initial_conditions(P, sigma(1,1));
+% P = stable_initial_conditions(P, sigma(1,1));
 eps_t(1,1) = P.eps_t_0;
 eps(1,1) = P.eps_0;
 MVF(1,1) = P.MVF_0;

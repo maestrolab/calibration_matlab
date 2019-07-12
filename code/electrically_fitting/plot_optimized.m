@@ -21,6 +21,10 @@ end
 % - x(15): n_4
 %alphas and sigma_crit are equal to zero in this problem
 
+% Plot pseudoelastic
+error = pseudoelastic(P, true);
+
+
 % Elastic Prediction Check
 elastic_check = 'N';
 
@@ -30,14 +34,19 @@ stress_flag = false;
 for i = 1:length(experiment)
     t = experiment(i).time;
     eps = experiment(i).strain;
-    sigma = experiment(i).stress;
+    sigma = experiment(i).stress + P.sigma_0;
     current = experiment(i).power;
-    
+    % current = cat(1,current(40:728),current(1:39));
     [sigma_n,MVF,T,eps_t, ...
         E,MVF_r eps_t_r, ...
         h_convection, pi_t, eps_n ] = Full_Model_TC( t, eps, current, P, ...
                                                    elastic_check, ...
                                                    stress_flag);
+     figure()
+    hold on
+    box on
+    plot(eps, eps_n, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    
     sigma = sigma / 1e6;
     sigma_n = sigma_n / 1e6;
     figure()

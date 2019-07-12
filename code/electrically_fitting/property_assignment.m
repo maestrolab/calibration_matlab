@@ -1,4 +1,4 @@
-function [P] = property_assignment(x, lb, ub, MVF_0)
+function [P] = property_assignment(x, lb, ub, P, MVF_0)
 global experiment
 % Inputs:
 % - x(1): E_M
@@ -21,6 +21,7 @@ global experiment
 % - x(18): alpha_A
 % - x(19): rho_E
 % - x(20): T_ambient
+% - x(21): T_0
 %alphas and sigma_crit are equal to zero in this problem
 
 if nargin < 4
@@ -33,40 +34,36 @@ x = x.*(ub - lb) + lb;
 
 %% SMA properties
 % Young's Modulus for Austenite and Martensite 
-P.E_A = x(1);
-P.E_M = x(1) - x(2);
+% P.E_A = 8.0000e+10;
+% P.E_M = 3.5299e+10;
 
 % Transformation temperatures (M:Martensite, A:
 % Austenite), (s:start,f:final)
-P.M_s = x(3);
-P.M_f = x(3) - x(4);
-P.A_s = P.M_f + x(5);
-P.A_f = P.A_s + x(6);
+P.M_s = (1+x(1))*P.M_s;
+P.M_f = (1+x(2))*P.M_f;
+P.A_s = (1+x(3))*P.A_s;
+P.A_f = (1+x(4))*P.A_f;
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 
-P.C_M = x(7);
-P.C_A = x(8);
+P.C_M = (1+x(5))*P.C_M;
+P.C_A = (1+x(6))*P.C_A;
 
 % Maximum and minimum transformation strain
-P.sig_crit = x(9);
-if P.sig_crit > 0
-    P.H_min = 0;
-else
-    P.H_min = x(10);
-end
-P.H_sat = x(10) + x(11);
-P.k = x(12);
+% P.H_min = x(10);
+
+P.H_sat = (1+x(7))*P.H_sat;
+P.k = (1+x(8))*P.k;
 
 % Smoothn hardening parameters 
-P.n1 = x(13);
-P.n2 = x(14);
-P.n3 = x(15);
-P.n4 = x(16);
+% P.n1 = x(13);
+% P.n2 = x(14);
+% P.n3 = x(15);
+% P.n4 = x(16);
 
 % Coefficient of thermal expansion
-P.alpha_M = x(17);
-P.alpha_A = x(18);
+P.alpha_M = x(9);
+P.alpha_A = x(10);
 
 %% Energy Coefficients
 % Mass density
@@ -76,22 +73,22 @@ P.c= 837.36;
 % Heat convection coefficient
 P.h = 1; % 1 is True and 0 is False
 % electrical resistance
-P.rho_E =  x(19);
+P.rho_E =  x(11);
 % Ambient Temperature (Initial Temperature??)
-P.T_ambient = x(20);
-P.T_0 = x(21);
+P.T_ambient = x(12);
+P.T_0 = x(13);
 
 %% Model Geometry
 % d: Diameter of considered 1D model
 P.d = 0.4e-3;
 
 %% Initial conditions
-% initial stress
-P.sigma_0 = 0;
-% initial MVF
-P.MVF_0 = MVF_0;
-% initial transformation strain
-P.eps_t_0 = 0;
+% % initial stress
+P.sigma_0 = 0; %x(14);
+% % initial MVF
+P.MVF_0 = 0; %x(15);
+% % initial transformation strain
+P.eps_t_0 = 0; %x(16);
 
 %% Algorithm parameters
 % Algorithmic delta for modified smooth hardening function

@@ -54,6 +54,7 @@ for i = 1:length(sigma)
 end
 
 box on 
+hold on
 plot(T_fwd_0,sigma/(1e6),'b', 'LineWidth',2, 'DisplayName', '\Phi_{fwd, \xi = 0}')
 plot(T_fwd_1,sigma/(1e6),'--b', 'LineWidth',2, 'DisplayName', '\Phi_{fwd, \xi = 1}')
 plot(T_rev_0,sigma/(1e6),'--r', 'LineWidth',2, 'DisplayName', '\Phi_{rev, \xi = 0}')

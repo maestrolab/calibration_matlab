@@ -45,6 +45,7 @@ try
 %         plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
         
           rmse = rmse + real(sqrt(sum(sum((sigma - sigma_n).^2))/numel(sigma)))/1e9;
+        end
     end
     rmse = rmse + pseudoelastic(P, false)/0.01;
 
