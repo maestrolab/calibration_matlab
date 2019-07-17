@@ -31,7 +31,7 @@ try
     for i = 1:length(experiment)
         field = char(fields(i));
         t = experiment(1).time;
-        eps = experiment(1).strain;
+        eps = experiment(1).strain + P.eps_0;
         sigma = experiment(1).stress + P.sigma_0;
         current = experiment(1).power;
         [sigma_n,MVF,T,eps_t, ...

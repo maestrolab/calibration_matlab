@@ -42,9 +42,9 @@ P.E_M = (1+x(2))*3.5299e+10;
 
 
 M_f = x(4);
-M_s = (1+x(3))*M_f ;
-A_s = (1+x(5))*M_f;
-A_f = (1+x(6))*A_s;
+M_s = M_f + x(3);
+A_s = x(4) + x(5);
+A_f = A_s + x(6);
 
 % mss = .5*(1+2^(-P.n1)*(P.n1+1)+2^(-P.n2)*(P.n2-1))/(P.n1*2^(-P.n1)+P.n2*2^(-P.n2));
 % msf = .5*(-1+2^(-P.n1)*(P.n1-1)+2^(-P.n2)*(P.n2+1))/(P.n1*2^(-P.n1)+P.n2*2^(-P.n2));
@@ -55,11 +55,12 @@ A_f = (1+x(6))*A_s;
 % asf = .5*(-1+2^(-P.n3)*(P.n3+1)+2^(-P.n4)*(P.n4-1))/(P.n3*2^(-P.n3)+P.n4*2^(-P.n4));
 % afs = .5*(-1+2^(-P.n3)*(P.n3-1)+2^(-P.n4)*(P.n4+1))/(P.n3*2^(-P.n3)+P.n4*2^(-P.n4));
 % aff = .5*(1+2^(-P.n3)*(P.n3+1)+2^(-P.n4)*(P.n4-1))/(P.n3*2^(-P.n3)+P.n4*2^(-P.n4));
-
-% P.M_s = mss*M_s + msf*M_f;
-% P.M_f = mfs*M_s + mff*M_f;
-% P.A_s = ass*A_s + asf*A_f;
-% P.A_f = afs*A_s + aff*A_f;
+% 
+% det = mss*mff-msf*mfs;
+% P.M_s = (mff*M_s - msf*M_f)/det;
+% P.M_f = (-mfs*M_s + mss*M_f)/det;
+% P.A_s = (aff*A_s - asf*A_f)/det;
+% P.A_f = (-afs*A_s + ass*A_f)/det;
 P.M_s = M_s;
 P.M_f = M_f;
 P.A_s = A_s;

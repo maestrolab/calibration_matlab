@@ -44,9 +44,9 @@ filename = '../../data/artificial_muscle/pseudoelastic_40C.xlsx';
 temperature_pseudo = 273.15 + xlsread(filename,'E7:E2093');
 stress_pseudo = 1e6*xlsread(filename,'I7:I2093');
 strain_pseudo  = 1e-2*xlsread(filename,'L7:L2093');
-temperature_pseudo = temperature_pseudo(1:2052);
-stress_pseudo = stress_pseudo(1:2052);
-strain_pseudo = strain_pseudo(1:2052);
+temperature_pseudo = temperature_pseudo(1:2046);
+stress_pseudo = stress_pseudo(1:2046);
+strain_pseudo = strain_pseudo(1:2046);
 % Filtering Data 
 temperature_pseudo = smooth(temperature_pseudo, 0.1,'loess');
 stress_pseudo = smooth(stress_pseudo, 0.1,'loess');
@@ -71,15 +71,15 @@ for i = 1:n_periods
 end
 
 t = data(1).time - min(data(1).time);
-eps = data(1).strain;
-sigma = data(1).stress;
+eps = data(1).strain - data(1).strain(1,1);
+sigma = data(1).stress - data(1).sigma(1,1);
 current = data(1).power;
 experiment = data;
 
 %% Set up the problem
 MVF_0 = 0;    
 x0 = [0, 0, 0, 0, 0, 0, 0, 0, ...
-     1e-6, 1e-6, ...
+     0, 0, ...
      82e-2, 300., 300.]; %...
 %      100e6, 0.5, 0];
 
@@ -108,16 +108,17 @@ n_ub = ones(size(ub));
 % Define function to be optimized
 fun = @(x)cost(x, lb, ub, P, MVF_0);
 nonlcon = [];
-options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
-    @optimplotfval,@optimplotfirstorderopt});
+% options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
+%     @optimplotfval,@optimplotfirstorderopt});
 
 % initial_error = cost(x, lb, ub, MVF_0);
-% options = optimoptions('ga','Display','iter','MaxGenerations',100, 'PlotFcn',{@gaplotbestf,...
-%     @gaplotbestindiv, @gaplotscores}, 'PopulationSize', 100, 'MaxStallGenerations', 50);
+options = optimoptions('ga','Display','iter','MaxGenerations',100, 'PlotFcn',{@gaplotbestf,...
+    @gaplotbestindiv, @gaplotscores}, 'PopulationSize', 100, 'MaxStallGenerations', 50);
 
-x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
-% x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
+% x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
+x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 P = property_assignment(x, lb, ub, P, MVF_0);
+save('electric_calibrated','P')
 disp(P)
 plot_optimized(P)
 phase_diagram(P, max(sigma))
