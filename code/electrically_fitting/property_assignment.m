@@ -84,12 +84,9 @@ P.d = 0.4e-3;
 
 %% Initial conditions
 % % initial stress
-P.sigma_0 = 0; %x(14);
-% % initial MVF
-P.MVF_0 = 0; %x(15);
-% % initial transformation strain
-P.eps_t_0 = 0; %x(16);
-
+P.sigma_0 = x(14);
+% % initial MVF and transformation strain;
+P = initial_conditions(P);
 %% Algorithm parameters
 % Algorithmic delta for modified smooth hardening function
 P.delta=1e-5;

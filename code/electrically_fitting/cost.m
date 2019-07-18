@@ -9,8 +9,7 @@ end
 if nargin < 6
     to_plot = 'strain-stress';
 end
-% Assigning material properties
-P = property_assignment(x, lb, ub, P, MVF_0);
+
 % disp(P)
 % Elastic Prediction Check
 elastic_check = 'N';
@@ -19,6 +18,8 @@ elastic_check = 'N';
 stress_flag = false;
 
 try
+    % Assigning material properties
+    P = property_assignment(x, lb, ub, P, MVF_0);
     fields = fieldnames(experiment(1));
     colors = [0 0 1;
           0 0.5 0;
@@ -40,13 +41,13 @@ try
                                                        elastic_check, ...
                                                        stress_flag);
 
-%         eps_n = eps_n - min(eps_n);
-%         plot(eps, sigma, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-%         plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
-        
+    %         eps_n = eps_n - min(eps_n);
+    %         plot(eps, sigma, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+    %         plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
+
           rmse = rmse + real(sqrt(sum(sum((sigma - sigma_n).^2))/numel(sigma)))/1e9;
     end
-    rmse = rmse + pseudoelastic(P, false)/0.01;
+    rmse = rmse + pseudoelastic(P, false)/0.04;
 
     if (initial_error == 0)
         initial_error = rmse;

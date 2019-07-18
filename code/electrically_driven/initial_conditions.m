@@ -1,5 +1,5 @@
-function [error] = initial_conditions(P)
-% For a given sigma_0 (DV), eps_0 (given), P.T_0 (DV) calculate MVF_0 and eps_t_0
+function [P] = initial_conditions(P)
+% For a given sigma_0 (DV) and P.T_0 (DV) calculate eps_0, MVF_0 and eps_t_0
 global experiment
 addpath('../temperature_driven/')
 
@@ -8,7 +8,7 @@ integration_scheme = 'I';
 
 n = 2;
 P.eps_0 = experiment(1).strain(1,1);
-sigma = (experiment(1).stress(1,1) + P.sigma_0)*ones(n,1);
+sigma = zeros(n,1); %(experiment(1).stress(1,1) + P.sigma_0)*ones(n,1);
 temperature = P.T_0*ones(n,1);
 
 P.eps_t_0 = 0;
@@ -19,8 +19,6 @@ while error > 1e-2
     [eps,MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(temperature, sigma, P, elastic_check, integration_scheme );
     P.eps_t_0 = eps_t(end, end);
     P.MVF_0 = MVF(end, end);
-    disp(eps(end,end))
-    disp(eps_t(end, end))
     error = abs(eps(end,end)-P.eps_0)/P.eps_0;
     P.eps_0 = eps(end,end);
 end
