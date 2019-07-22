@@ -5,7 +5,7 @@ global experiment
 global temperature_pseudo
 global stress_pseudo
 global strain_pseudo
-initial_error = 0;
+initial_error = 0; 
 initial_delta_eps = 0;
 
 addpath('../electrically_driven/')
@@ -81,21 +81,21 @@ MVF_0 = 0;
 x0 = [0, 0, 0, 0, 0, 0, 0, 0, ...
      0, 0, ...
      82e-2, 300., 300., ...
-     100e6]; %, 0.5, 0];
+     100e6, 0]; %, 0.5, 0];
 
 A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [-0.02, -0.02, -0.02, -0.02, -0.2, -0.2, -0.4, -0.4,...
+lb = [-0.05, -0.05, -0.05, -0.05, -0.2, -0.2, -0.4, -0.4,...
      0., 0,...
      10e-3, 290., 290., ...
-       0]; % 0, 0];
+       0, -.5]; % 0, 0];
 
-ub = [0.02, 0.02, 0.02, 0.02, 0.2, 0.2, 0.2, 0.2,...
-     1e-5, 1e-5, ...
-     500e-2, 310., 350., ...
-       500e6]; %, 1, 0.06];
+ub = [0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.5, 0.5,...
+     1.2e-5, 1.2e-5, ...
+     500e-2, 330., 350., ...
+       500e6, 0]; %, 1, 0.06];
 
 
 % Normalized x0
@@ -108,19 +108,19 @@ n_ub = ones(size(ub));
 % Define function to be optimized
 fun = @(x)cost(x, lb, ub, P, MVF_0);
 nonlcon = [];
-% options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
-%     @optimplotfval,@optimplotfirstorderopt});
+options = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
+    @optimplotfval,@optimplotfirstorderopt});
 
 % initial_error = cost(x, lb, ub, MVF_0);
 options = optimoptions('ga','Display','iter','MaxGenerations',1000, 'PlotFcn',{@gaplotbestf,...
     @gaplotbestindiv, @gaplotscores}, 'PopulationSize', 200, 'MaxStallGenerations', 50);
 
-% x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
+% x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 P = property_assignment(x, lb, ub, P, MVF_0);
-save('electric_calibrated','P')
+% save('electric_calibrated','P')
 disp(P)
 plot_optimized(P)
-phase_diagram(P, max(sigma))
+phase_diagram(P, max(sigma)+P.sigma_0)
 
 

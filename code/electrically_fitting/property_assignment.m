@@ -35,14 +35,14 @@ x = x.*(ub - lb) + lb;
 %% SMA properties
 % Young's Modulus for Austenite and Martensite 
 % P.E_A = 8.0000e+10;
-% P.E_M = 3.5299e+10;
+P.E_M = P.E_A*(1+x(15));
 
 % Transformation temperatures (M:Martensite, A:
 % Austenite), (s:start,f:final)
-P.M_s = (1+x(1))*P.M_s;
+P.M_s = (1+x(1))*P.M_s +x(2)*P.M_f;
 P.M_f = (1+x(2))*P.M_f;
 P.A_s = (1+x(3))*P.A_s;
-P.A_f = (1+x(4))*P.A_f;
+P.A_f = (1+x(4))*P.A_f +x(3)*P.A_s;
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 

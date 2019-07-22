@@ -5,7 +5,7 @@ global experiment
 global temperature_pseudo
 global stress_pseudo
 global strain_pseudo
-initial_error = 0;
+initial_error = 0; 
 initial_delta_eps = 0;
 
 addpath('../electrically_driven/')
@@ -37,28 +37,6 @@ period_list = [25];
 duty_list = [50];
 phase_list = [-25];
 
-n_cycles = 3;
-
-% Reading Excel File 
-filename = '../../data/artificial_muscle/pseudoelastic_40C.xlsx';
-temperature_pseudo = 273.15 + xlsread(filename,'E7:E2093');
-stress_pseudo = 1e6*xlsread(filename,'I7:I2093');
-strain_pseudo  = 1e-2*xlsread(filename,'L7:L2093');
-temperature_pseudo = temperature_pseudo(1:2046);
-stress_pseudo = stress_pseudo(1:2046);
-strain_pseudo = strain_pseudo(1:2046);
-% Filtering Data 
-temperature_pseudo = smooth(temperature_pseudo, 0.1,'loess');
-stress_pseudo = smooth(stress_pseudo, 0.1,'loess');
-strain_pseudo = smooth(strain_pseudo, 0.1,'loess'); 
-stress_pseudo = stress_pseudo - stress_pseudo(1,1);
-strain_pseudo = strain_pseudo - strain_pseudo(1,1);
-n_periods = length(period_list);
-n_duty = length(duty_list);
-n_phase = length(phase_list);
-n_combinations = n_periods*n_duty*n_phase;
-DOE_matrix = zeros(n_combinations, 5);
-
 % Extracting data
 directory = '../../data/artificial_muscle_electric/';
                   
@@ -76,26 +54,35 @@ sigma = data(1).stress - data(1).stress(1,1);
 current = data(1).power;
 experiment = data;
 
+start = ceil(2*length(sigma)/3);
+finish = length(sigma);
+    
+sigma = sigma(start:finish);
+temperature = temperature(start:finish);
+
+figure()
+plot(temperature,sigma)
+
 %% Set up the problem
 MVF_0 = 0;    
 x0 = [0, 0, 0, 0, 0, 0, 0, 0, ...
      0, 0, ...
-     82e-2, 300., 300.]; %, ...
-     % 100e6]; %, 0.5, 0];
+     82e-2, 300., 300., ...
+     100e6]; %, 0.5, 0];
 
 A = [];
 b = [];
 Aeq = [];
 beq = [];
-lb = [-0.02, -0.02, -0.02, -0.02, -0.2, -0.2, -0.4, -0.4,...
+lb = [-0.05, -0.05, -0.05, -0.05, -0.2, -0.2, -0.4, -0.4,...
      0., 0,...
-     10e-3, 290., 290.]; %, ...
-%       0]; % 0, 0];
+     10e-3, 290., 290., ...
+       0]; % 0, 0];
 
-ub = [0.02, 0.02, 0.02, 0.02, 0.2, 0.2, 0.2, 0.2,...
+ub = [0.05, 0.05, 0.05, 0.05, 0.2, 0.2, 0.5, 0.5,...
      1e-5, 1e-5, ...
-     500e-2, 310., 350.]; %, ...
-%       500e6]; %, 1, 0.06];
+     500e-2, 330., 350., ...
+       500e6]; %, 1, 0.06];
 
 
 % Normalized x0
@@ -112,8 +99,8 @@ nonlcon = [];
 %     @optimplotfval,@optimplotfirstorderopt});
 
 % initial_error = cost(x, lb, ub, MVF_0);
-options = optimoptions('ga','Display','iter','MaxGenerations',100, 'PlotFcn',{@gaplotbestf,...
-    @gaplotbestindiv, @gaplotscores}, 'PopulationSize', 200, 'MaxStallGenerations', 10);
+options = optimoptions('ga','Display','iter','MaxGenerations',20, 'PlotFcn',{@gaplotbestf,...
+    @gaplotbestindiv, @gaplotscores}, 'PopulationSize', 200, 'MaxStallGenerations', 50);
 
 % x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
 x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options);
@@ -121,6 +108,6 @@ P = property_assignment(x, lb, ub, P, MVF_0);
 save('electric_calibrated','P')
 disp(P)
 plot_optimized(P)
-phase_diagram(P, max(sigma))
+phase_diagram(P, max(sigma)+P.sigma_0)
 
 

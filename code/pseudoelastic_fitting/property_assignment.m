@@ -77,7 +77,7 @@ if P.sig_crit > 0
 else
     P.H_min = x(9);
 end
-P.H_sat = x(9) + x(10);
+P.H_sat = x(9) + (0.06-x(9))*x(10);
 P.k = x(11);
 
 % Coefficient of thermal expansion

@@ -30,6 +30,10 @@ try
           0.25 0.25 0.25];
     rmse = 0;
     for i = 1:length(experiment)
+%             figure(1);
+%         clf(1);
+%         box on 
+%         hold on
         field = char(fields(i));
         t = experiment(1).time;
         eps = experiment(1).strain + P.eps_0;
@@ -41,13 +45,15 @@ try
                                                        elastic_check, ...
                                                        stress_flag);
 
-    %         eps_n = eps_n - min(eps_n);
-    %         plot(eps, sigma, 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-    %         plot(eps_n, sigma_n, '--','color', colors(i,:), 'linewidth',2)
+        eps_n = eps_n;
 
-          rmse = rmse + real(sqrt(sum(sum((sigma - sigma_n).^2))/numel(sigma)))/1e9;
+        start = ceil(2*length(sigma)/3);
+        finish = length(sigma);
+%         plot(eps(start:finish), sigma(start:finish), 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+%         plot(eps_n(start:finish), sigma_n(start:finish), '--','color', colors(i,:), 'linewidth',2)
+          rmse = rmse + real(sqrt(sum(sum((sigma(start:finish) - sigma_n(start:finish)).^2))/numel(sigma(start:finish))))/1e9;
     end
-    rmse = rmse + pseudoelastic(P, false)/0.04;
+    % rmse = rmse + pseudoelastic(P, false)/0.04;
 
     if (initial_error == 0)
         initial_error = rmse;

@@ -22,7 +22,7 @@ end
 %alphas and sigma_crit are equal to zero in this problem
 
 % Plot pseudoelastic
-error = pseudoelastic(P, true);
+% error = pseudoelastic(P, true);
 
 
 % Elastic Prediction Check
@@ -33,7 +33,7 @@ stress_flag = false;
 
 for i = 1:length(experiment)
     t = experiment(i).time;
-    eps = experiment(i).strain;
+    eps = experiment(i).strain+ P.eps_0;
     sigma = experiment(i).stress + P.sigma_0;
     current = experiment(i).power;
     % current = cat(1,current(40:728),current(1:39));
@@ -45,15 +45,18 @@ for i = 1:length(experiment)
      figure()
     hold on
     box on
-    plot(eps, eps_n, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    plot(t, eps, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    
+    start = ceil(2*length(sigma)/3);
+    finish = length(sigma);
     
     sigma = sigma / 1e6;
     sigma_n = sigma_n / 1e6;
     figure()
     hold on
     box on
-    plot(eps, sigma, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
-    plot(eps_n, sigma_n, 'r', 'linewidth',2, 'DisplayName', 'Model');
+    plot(eps(start:finish), sigma(start:finish), 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    plot(eps_n(start:finish), sigma_n(start:finish), 'r', 'linewidth',2, 'DisplayName', 'Model');
     legend('Location','best')
     xlabel('Strain (m/m)')
     ylabel('Stress (MPa)')
@@ -61,33 +64,33 @@ for i = 1:length(experiment)
     figure()
     hold on
     box on
-    plot(t, MVF, 'b', 'linewidth',2, 'DisplayName', 'MVF');
-    plot(t, eps_t, 'r', 'linewidth',2, 'DisplayName', 'eps_t');
+    plot(t(start:finish), MVF(start:finish), 'b', 'linewidth',2, 'DisplayName', 'MVF');
+    plot(t(start:finish), eps_t(start:finish), 'r', 'linewidth',2, 'DisplayName', 'eps_t');
     legend('Location','best')
 
     figure()
     hold on
     box on
-    plot(t, sigma, 'k', 'linewidth',2, 'DisplayName', 'Experiment');
-    plot(t, sigma_n, '--k', 'linewidth',2, 'DisplayName', 'Model');
+    plot(t(start:finish), sigma(start:finish), 'k', 'linewidth',2, 'DisplayName', 'Experiment');
+    plot(t(start:finish), sigma_n(start:finish), '--k', 'linewidth',2, 'DisplayName', 'Model');
     legend('Location','best')
 
     figure()
     hold on
     box on
-    plot(t, T, 'k', 'linewidth',2, 'DisplayName', 'Temperature');
+    plot(t(start:finish), T(start:finish), 'k', 'linewidth',2, 'DisplayName', 'Temperature');
     legend('Location','best')
 
         figure()
     hold on
     box on
-    plot(t, current, 'k', 'linewidth',2, 'DisplayName', 'Current');
+    plot(t(start:finish), current(start:finish), 'k', 'linewidth',2, 'DisplayName', 'Current');
     legend('Location','best')
     
     figure()
     hold on
-    plot(T, sigma, 'k', 'linewidth',2, 'DisplayName', 'Experimental');
-    plot(T, sigma_n, '--k', 'linewidth',2, 'DisplayName', 'Model');
+    plot(T(start:finish), sigma(start:finish), 'k', 'linewidth',2, 'DisplayName', 'Experimental');
+    plot(T(start:finish), sigma_n(start:finish), '--k', 'linewidth',2, 'DisplayName', 'Model');
 end
 
 end

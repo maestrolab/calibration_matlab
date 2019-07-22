@@ -8,7 +8,7 @@ integration_scheme = 'I';
 
 n = 2;
 P.eps_0 = experiment(1).strain(1,1);
-sigma = zeros(n,1); %(experiment(1).stress(1,1) + P.sigma_0)*ones(n,1);
+sigma = (experiment(1).stress(1,1) + P.sigma_0)*ones(n,1);
 temperature = P.T_0*ones(n,1);
 
 P.eps_t_0 = 0;
