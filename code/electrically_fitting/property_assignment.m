@@ -39,15 +39,15 @@ P.E_M = P.E_A*(1+x(15));
 
 % Transformation temperatures (M:Martensite, A:
 % Austenite), (s:start,f:final)
-P.M_s = (1+x(1))*P.M_s +x(2)*P.M_f;
-P.M_f = (1+x(2))*P.M_f;
-P.A_s = (1+x(3))*P.A_s;
-P.A_f = (1+x(4))*P.A_f +x(3)*P.A_s;
+P.M_s = x(2) + x(1);
+P.M_f = x(2);
+P.A_s = x(3);
+P.A_f = x(3) + x(4);
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 
-P.C_M = (1+x(5))*P.C_M;
-P.C_A = (1+x(6))*P.C_A;
+P.C_M = x(5);
+P.C_A = x(6);
 
 % Maximum and minimum transformation strain
 % P.H_min = x(10);
@@ -77,7 +77,7 @@ P.rho_E =  x(11);
 % Ambient Temperature (Initial Temperature??)
 P.T_ambient = x(12);
 P.T_0 = x(13);
-
+P.h = x(16);
 %% Model Geometry
 % d: Diameter of considered 1D model
 P.d = 0.4e-3;
@@ -86,8 +86,14 @@ P.d = 0.4e-3;
 % % initial stress
 P.sigma_0 = x(14);
 % % initial MVF and transformation strain;
-P = initial_conditions(P);
-%% Algorithm parameters
+try
+    P = initial_conditions(P);
+catch
+    P.eps_0 = 0;
+    P.MVF_0 = 0;
+    P.eps_t_0 = 0;
+end
+    %% Algorithm parameters
 % Algorithmic delta for modified smooth hardening function
 P.delta=1e-5;
 % Calibration Stress

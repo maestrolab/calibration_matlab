@@ -30,14 +30,14 @@ try
           0.25 0.25 0.25];
     rmse = 0;
     for i = 1:length(experiment)
-%             figure(1);
-%         clf(1);
-%         box on 
-%         hold on
+%                 figure(1);
+%             clf(1);
+%             box on 
+%             hold on
         field = char(fields(i));
         t = experiment(1).time;
-        eps = experiment(1).strain + P.eps_0;
-        sigma = experiment(1).stress + P.sigma_0;
+        eps = experiment(1).strain - experiment(1).strain(1,1)+ P.eps_0;
+        sigma = experiment(1).stress - experiment(1).stress(1,1) + P.sigma_0;
         current = experiment(1).power;
         [sigma_n,MVF,T,eps_t, ...
             E,MVF_r eps_t_r, ...
@@ -49,21 +49,30 @@ try
 
         start = ceil(2*length(sigma)/3);
         finish = length(sigma);
-%         plot(eps(start:finish), sigma(start:finish), 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-%         plot(eps_n(start:finish), sigma_n(start:finish), '--','color', colors(i,:), 'linewidth',2)
-          rmse = rmse + real(sqrt(sum(sum((sigma(start:finish) - sigma_n(start:finish)).^2))/numel(sigma(start:finish))))/1e9;
+%             plot(eps(start:finish), sigma(start:finish), 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+%             plot(eps_n(start:finish), sigma_n(start:finish), '--','color', colors(i,:), 'linewidth',2)
+          rmse = rmse + sqrt(sum((sigma(start:finish) - sigma_n(start:finish)).^2)/numel(sigma(start:finish)))/1e9;
     end
-    % rmse = rmse + pseudoelastic(P, false)/0.04;
 
     if (initial_error == 0)
         initial_error = rmse;
     end
       output = rmse; %/initial_error ;
-%     disp('output')
-%     disp(output)
+    if isreal(output) ~= true
+      output = abs(output)*10;
+    end
+    %     disp('output')
+    %     disp(output)
 catch
-    output = 2;
-end  
+    output = 100;
+end
+
+try
+    rmse = pseudoelastic(P, false)/0.04;
+catch
+    rmse = 200;
+end
+output = output + rmse;
 end
 
 

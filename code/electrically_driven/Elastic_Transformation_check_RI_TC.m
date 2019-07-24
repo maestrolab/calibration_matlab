@@ -42,6 +42,8 @@ if P.h == 1
     Nu = (alpha_1 + alpha_2*(Gr*Pr/(1 + (0.56/Pr)^(9./16))^(16./9))^(1./6))^2;
     % Calculate convection coefficient h from definition of Nusselt number
     h = k_air*Nu/P.d;
+elseif P.h ~= 0
+    h = P.h;
 else
     h = 0;
 end

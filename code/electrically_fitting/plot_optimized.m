@@ -22,7 +22,7 @@ end
 %alphas and sigma_crit are equal to zero in this problem
 
 % Plot pseudoelastic
-% error = pseudoelastic(P, true);
+error = pseudoelastic(P, true);
 
 
 % Elastic Prediction Check
@@ -33,8 +33,8 @@ stress_flag = false;
 
 for i = 1:length(experiment)
     t = experiment(i).time;
-    eps = experiment(i).strain+ P.eps_0;
-    sigma = experiment(i).stress + P.sigma_0;
+    eps = experiment(1).strain - experiment(1).strain(1,1)+ P.eps_0;
+    sigma = experiment(1).stress - experiment(1).stress(1,1) + P.sigma_0;
     current = experiment(i).power;
     % current = cat(1,current(40:728),current(1:39));
     [sigma_n,MVF,T,eps_t, ...
