@@ -7,7 +7,7 @@ if nargin < 5
     MVF_0 = 1.0;
 end
 if nargin < 6
-    to_plot = 'strain-stress';
+    to_plot = false;
 end
 
 % disp(P)
@@ -30,10 +30,7 @@ try
           0.25 0.25 0.25];
     rmse = 0;
     for i = 1:length(experiment)
-%                 figure(1);
-%             clf(1);
-%             box on 
-%             hold on
+
         field = char(fields(i));
         t = experiment(1).time;
         eps = experiment(1).strain - experiment(1).strain(1,1)+ P.eps_0;
@@ -49,8 +46,14 @@ try
 
         start = ceil(2*length(sigma)/3);
         finish = length(sigma);
-%             plot(eps(start:finish), sigma(start:finish), 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
-%             plot(eps_n(start:finish), sigma_n(start:finish), '--','color', colors(i,:), 'linewidth',2)
+        if to_plot
+%             figure(1);
+%            clf(1);
+%             box on 
+            hold on
+            plot(eps(start:finish), sigma(start:finish), 'color', colors(i,:), 'linewidth',2, 'DisplayName', field);
+            plot(eps_n(start:finish), sigma_n(start:finish), '--','color', colors(i,:), 'linewidth',2)
+        end
           rmse = rmse + sqrt(sum((sigma(start:finish) - sigma_n(start:finish)).^2)/numel(sigma(start:finish)))/1e9;
     end
 
@@ -68,11 +71,10 @@ catch
 end
 
 try
-    rmse = pseudoelastic(P, false)/0.04;
+    output = output + pseudoelastic(P, false)/0.04;
 catch
-    rmse = 200;
+    output = output + 200;
 end
-output = output + rmse;
 end
 
 

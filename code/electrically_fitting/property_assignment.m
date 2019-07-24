@@ -1,27 +1,22 @@
 function [P] = property_assignment(x, lb, ub, P, MVF_0)
 global experiment
 % Inputs:
-% - x(1): E_M
-% - x(2): E_A
-% - x(3): M_s
-% - x(4): M_s - M_f
-% - x(5): A_s
-% - x(6): A_f - A_s
-% - x(7): C_M
-% - x(8): C_A
-% - x(9): sigma_crit
-% - x(10): H_min
-% - x(11): H_max - H_min
-% - x(12): k
-% - x(13): n_1 
-% - x(14): n_2
-% - x(15): n_3
-% - x(16): n_4
-% - x(17): alpha_M
-% - x(18): alpha_A
-% - x(19): rho_E
-% - x(20): T_ambient
-% - x(21): T_0
+% - x(1): M_f - M_s
+% - x(2): M_f
+% - x(3): A_s
+% - x(4): A_f - A_s
+% - x(5): C_M
+% - x(6): C_A
+% - x(7): H_max - H_min (proportional to initial)
+% - x(8): k (proportional to initial)
+% - x(9): alpha_M
+% - x(10): alpha_A
+% - x(11): rho_E
+% - x(12): T_ambient
+% - x(13): T_0
+% - x(14): sigma_0
+% - x(15): E_A
+% - x(16): h
 %alphas and sigma_crit are equal to zero in this problem
 
 if nargin < 4
@@ -51,9 +46,8 @@ P.C_A = x(6);
 
 % Maximum and minimum transformation strain
 % P.H_min = x(10);
-
-P.H_sat = (1+x(7))*P.H_sat;
-P.k = (1+x(8))*P.k;
+P.H_sat = x(7);
+P.k = x(8);
 
 % Smoothn hardening parameters 
 % P.n1 = x(13);
