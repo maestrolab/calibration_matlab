@@ -1,6 +1,5 @@
-function [P] = initial_conditions(P)
+function [P] = initial_conditions(P, experiment)
 % For a given sigma_0 (DV) and P.T_0 (DV) calculate eps_0, MVF_0 and eps_t_0
-global experiment
 addpath('../temperature_driven/')
 
 elastic_check = 'N';

@@ -36,7 +36,7 @@ stress_flag = false;
 integration_scheme = 'I';
 
 [eps,MVF,eps_t,E,MVF_r,eps_t_r ] = Full_Model_stress(temperature_pseudo, stress_pseudo, P, elastic_check, integration_scheme );
- figure(4);
+figure(4);
 clf(4);
 box on 
 hold on

@@ -78,7 +78,7 @@ MVF_0 = 0;
 x0 = [P.M_s-P.M_f, P.M_f, P.A_s, P.A_f-P.A_s, P.C_M, P.C_A, P.H_sat, P.k, ...
      0, 0, ...
      1e-7, 300., 300., ...
-     10e6, P.E_M/P.E_A-1, 0, 0]; %, 0.5, 0];
+     10e6, P.E_M/P.E_A-1, 0]; %, 0.5, 0];
 
 A = [];
 b = [];
@@ -87,13 +87,13 @@ beq = [];
 
 lb = [5, 250, 280, 5, 4E6, 4E6, 0., 0.0001e-6,...
      0., 0,...
-     1e-8, 283., 273., ...
-       0, -.9, 0, 0]; % 0, 0];
+     1e-7, 290., 290., ...
+       0, 0.32-1, 0]; % 0, 0];
 
-ub = [70, 300, 350, 50, 20E6, 20E6, 0.6, 0.02e-6,...
+ub = [30, 310, 350, 30, 20E6, 20E6, 0.6, 0.02e-6,...
      1.2e-5, 1.2e-5, ...
      1.2e-6, 320., 350., ...
-       100e6, 0, 1000, length(data(1).stress)]; %, 1, 0.06];
+       100e6, 0, length(data(1).stress)]; %, 1, 0.06];
 
 
 % Normalized x0
@@ -108,15 +108,15 @@ fun = @(x)cost(x, lb, ub, P, experiment, pseudo_experiment, MVF_0);
 fun_plot = @(x)cost(x, lb, ub, P, experiment, pseudo_experiment, MVF_0, true);
 nonlcon = [];
 options_fmincon = optimoptions('fmincon','Display','iter','Algorithm','sqp', 'MaxFunEvals', 1000000, 'PlotFcns',{@optimplotx,...
-    @optimplotfval,@fmincon_plot},'UseParallel', true);
+    @optimplotfval,@fmincon_plot});
 options_ga = optimoptions('ga','Display','iter','MaxGenerations',1000, 'PlotFcn',{@gaplotbestf,...
     @gaplotbestindiv, @ga_plot}, 'PopulationSize', 500, 'MaxStallGenerations', 50,'UseParallel', true, 'UseVectorized', false, 'EliteCount', 10);
-%x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options_fmincon);
+x = fmincon(fun, n_x0, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options_fmincon);
 
 options_ga.InitialPopulationMatrix = repmat(x0, [10 1]);
 x = ga(fun, length(n_x0), A, b, Aeq, beq, n_lb, n_ub, nonlcon, options_ga);
 x = fmincon(fun, x, A, b, Aeq, beq, n_lb, n_ub, nonlcon, options_fmincon);
-P = property_assignment(x, lb, ub, P, MVF_0);
+P = property_assignment(x, lb, ub, P, experiment, MVF_0);
 % save('electric_calibrated','P')
 disp(P)
 plot_optimized(P, experiment, pseudo_experiment)

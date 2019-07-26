@@ -1,5 +1,5 @@
-function [P] = property_assignment(x, lb, ub, P, MVF_0)
-global experiment
+function [P] = property_assignment(x, lb, ub, P, experiment, MVF_0)
+
 % Inputs:
 % - x(1): M_f - M_s
 % - x(2): M_f
@@ -19,7 +19,7 @@ global experiment
 % - x(16): h
 %alphas and sigma_crit are equal to zero in this problem
 
-if nargin < 4
+if nargin < 5
     MVF_0 = 1.0;
 end
 
@@ -71,7 +71,7 @@ P.rho_E =  x(11);
 % Ambient Temperature (Initial Temperature??)
 P.T_ambient = x(12);
 P.T_0 = x(13);
-P.h = x(16);
+P.h = 360;
 %% Model Geometry
 % d: Diameter of considered 1D model
 P.d = 0.4e-3;
@@ -81,7 +81,7 @@ P.d = 0.4e-3;
 P.sigma_0 = x(14);
 % % initial MVF and transformation strain;
 try
-    P = initial_conditions(P);
+    P = initial_conditions(P, experiment);
 catch
     P.eps_0 = 0;
     P.MVF_0 = 0;
@@ -95,7 +95,7 @@ P.sig_cal=200E6;
 % Tolerance for change in MVF during implicit iteration
 P.MVF_tolerance=1e-8;
 try
-    P.delay = ceil(x(17));
+    P.delay = ceil(x(16));
 catch
     P.delay = 0;
 end

@@ -16,7 +16,7 @@ stress_flag = false;
 
  try
     % Assigning material properties
-    P = property_assignment(x, lb, ub, P, MVF_0);
+    P = property_assignment(x, lb, ub, P, experiment, MVF_0);
     fields = fieldnames(experiment(1));
     colors = [0 0 1;
           0 0.5 0;
@@ -69,11 +69,11 @@ catch
     output = 100;
 end
 
-try
-    output = output + pseudoelastic(P, pseudo_experiment, false)/0.04;
-catch
-    output = output + 200;
-end
+% try
+%     output = output + pseudoelastic(P, pseudo_experiment, false)/0.04;
+% catch
+%     output = output + 200;
+% end
 end
 
 

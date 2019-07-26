@@ -22,7 +22,7 @@ end
 %alphas and sigma_crit are equal to zero in this problem
 
 % Plot pseudoelastic
-error = pseudoelastic(P, pseudo_experiment, true);
+% error = pseudoelastic(P, pseudo_experiment, true);
 
 
 % Elastic Prediction Check
