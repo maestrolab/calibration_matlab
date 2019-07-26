@@ -1,9 +1,12 @@
-function output = cost(x, lb, ub, P, experiment, pseudo_experiment, MVF_0, to_plot)
+function output = cost(x, lb, ub, P, MVF_0, to_plot)
+global initial_error
+global initial_delta_eps
+global experiment
 
-if nargin < 7
+if nargin < 5
     MVF_0 = 1.0;
 end
-if nargin < 8
+if nargin < 6
     to_plot = false;
 end
 
@@ -14,7 +17,7 @@ elastic_check = 'N';
 % Only positive stress?
 stress_flag = false;
 
- try
+% try
     % Assigning material properties
     P = property_assignment(x, lb, ub, P, MVF_0);
     fields = fieldnames(experiment(1));
@@ -29,14 +32,13 @@ stress_flag = false;
     for i = 1:length(experiment)
 
         field = char(fields(i));
-        t = experiment(1).time - min(experiment(1).time);
+        t = experiment(1).time;
         eps = experiment(1).strain - experiment(1).strain(1,1)+ P.eps_0;
         sigma = experiment(1).stress - experiment(1).stress(1,1) + P.sigma_0;
-
         if P.delay>=0
-            current = [experiment(1).power(1+P.delay:end); experiment(1).power(1:P.delay)];
+            current = [experiment(1).power(1+P.delay:end); experiment(1).power(end:1+P.delay)];
         else
-            current = [experiment(1).power(end+P.delay+1:end); experiment(1).power(1:end+P.delay)];
+            current = [experiment(1).power(end+P.delay:end); experiment(1).power(1:end+P.delay)];
         end
         [sigma_n,MVF,T,eps_t, ...
             E,MVF_r eps_t_r, ...
@@ -59,7 +61,10 @@ stress_flag = false;
           rmse = rmse + sqrt(sum((sigma(start:finish) - sigma_n(start:finish)).^2)/numel(sigma(start:finish)))/1e9;
     end
 
-      output = rmse;
+    if (initial_error == 0)
+        initial_error = rmse;
+    end
+      output = rmse; %/initial_error ;
     if isreal(output) ~= true
       output = abs(output)*10;
     end
@@ -70,7 +75,7 @@ catch
 end
 
 try
-    output = output + pseudoelastic(P, pseudo_experiment, false)/0.04;
+    output = output + pseudoelastic(P, false)/0.04;
 catch
     output = output + 200;
 end

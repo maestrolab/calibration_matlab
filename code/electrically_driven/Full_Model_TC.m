@@ -4,7 +4,7 @@ function [ sigma, MVF, T, eps_t, E, MVF_r, eps_t_r, h_convection, pi_t, eps] = F
 % inputs: time(t), eps(strain), P(material properties), elastic_check(?), T_ambient
 
 % Convert current to heat source (Bhattacharya et al)
-r = (P.rho_E/P.rho)*(current.^2)/(pi*(P.d/2)^2);
+r = (P.rho_E/P.rho)*(current.^2)/(pi*(P.d/2)^2)^2;
 
 % Current transformation strain at calibration stress
 H_cur_cal = H_cursolver(P.sig_cal, P.sig_crit,P.k,P.H_min,P.H_sat);

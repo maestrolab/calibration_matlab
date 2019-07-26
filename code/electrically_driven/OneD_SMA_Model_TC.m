@@ -15,7 +15,7 @@ stress_flag = true;
 % Temperature and time at the start and at the ends of each loading step
 % Linear increments strain and temperature loading step assumed
 cycles = 20;
-frequency = 5;
+frequency = 0.1;
 
 t_inp = [0; 20; ]; %s
 for i=1:cycles
@@ -24,14 +24,14 @@ end
 
 
 eps_min = 0.;
-eps_max = .059;
+eps_max = .0;
 eps_inp = [eps_min; eps_min;];
 for i=1:cycles
     eps_inp = [eps_inp; [eps_max,eps_min]'];
 end
-current_inp = [  0; 1;]; %A
+current_inp = [  0; 0;]; %A
 current_min = 0.;
-current_max = .0;
+current_max = 2;
 for i=1:cycles
     current_inp = [current_inp; [current_max, current_min]'];
 end
@@ -77,10 +77,10 @@ P.c= 837.36;
 % Heat convection coefficient
 P.h = 1; % 1 is True and 0 is False
 % electrical resistance
-P.rho_E =  1./1.3494e+03;
+P.rho_E =  1e-6;
 % Ambient Temperature (Initial Temperature??)
 P.T_ambient = 303.15;
-
+P.T_0 = P.T_ambient;
 %% Model Geometry
 % d: Diameter of considered 1D model
 P.d = 0.4e-3;

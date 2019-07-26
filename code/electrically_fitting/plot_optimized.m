@@ -1,5 +1,5 @@
-function output = plot_optimized(P, to_plot)
-global experiment
+function output = plot_optimized(P, experiment, pseudo_experiment, to_plot)
+
 if nargin < 2
     to_plot = ['temperature-strain'];
 end
@@ -22,7 +22,7 @@ end
 %alphas and sigma_crit are equal to zero in this problem
 
 % Plot pseudoelastic
-error = pseudoelastic(P, true);
+error = pseudoelastic(P, pseudo_experiment, true);
 
 
 % Elastic Prediction Check
@@ -32,26 +32,27 @@ elastic_check = 'N';
 stress_flag = false;
 
 for i = 1:length(experiment)
-    t = experiment(i).time;
+    t = experiment(1).time - min(experiment(1).time);
     eps = experiment(1).strain - experiment(1).strain(1,1)+ P.eps_0;
     sigma = experiment(1).stress - experiment(1).stress(1,1) + P.sigma_0;
-    current = experiment(i).power;
+    if P.delay>=0
+        current = [experiment(1).power(1+P.delay:end); experiment(1).power(1:P.delay)];
+    else
+        current = [experiment(1).power(end+P.delay+1:end); experiment(1).power(1:end+P.delay)];
+    end
     % current = cat(1,current(40:728),current(1:39));
     [sigma_n,MVF,T,eps_t, ...
         E,MVF_r eps_t_r, ...
         h_convection, pi_t, eps_n ] = Full_Model_TC( t, eps, current, P, ...
                                                    elastic_check, ...
                                                    stress_flag);
-     figure()
-    hold on
-    box on
-    plot(t, eps, 'b', 'linewidth',2, 'DisplayName', 'Experimental');
+    
+    sigma = sigma / 1e6;
+    sigma_n = sigma_n / 1e6;
     
     start = ceil(2*length(sigma)/3);
     finish = length(sigma);
     
-    sigma = sigma / 1e6;
-    sigma_n = sigma_n / 1e6;
     figure()
     hold on
     box on
@@ -78,7 +79,12 @@ for i = 1:length(experiment)
     figure()
     hold on
     box on
-    plot(t(start:finish), T(start:finish), 'k', 'linewidth',2, 'DisplayName', 'Temperature');
+    yyaxis left
+    plot(t(start:finish), eps(start:finish), 'b', 'linewidth',2, 'DisplayName', 'Strain');
+    ylim([min(eps(start:finish)) max(eps(start:finish))])
+    yyaxis right
+    plot(t(start:finish), T(start:finish), 'r', 'linewidth',2, 'DisplayName', 'Temperature');
+    ylim([min(T(start:finish)) max(T(start:finish))])
     legend('Location','best')
 
         figure()

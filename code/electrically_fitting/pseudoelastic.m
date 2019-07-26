@@ -1,9 +1,9 @@
-function [error] = pseudoelastic(P, to_plot)
-global temperature_pseudo
-global stress_pseudo
-global strain_pseudo
-addpath('../temperature_driven/')
+function [error] = pseudoelastic(P, pseudo_experiment, to_plot)
 
+addpath('../temperature_driven/')
+temperature_pseudo = pseudo_experiment.temperature;
+stress_pseudo = pseudo_experiment.stress;
+strain_pseudo = pseudo_experiment.strain;
 
 P.eps_0 = strain_pseudo(1,1);
 P.eps_t_0 = 0;

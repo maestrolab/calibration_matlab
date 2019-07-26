@@ -61,9 +61,9 @@ P.alpha_A = x(10);
 
 %% Energy Coefficients
 % Mass density
-P.rho= 6500; %kg/m^3
+P.rho= 6450; %kg/m^3
 % Specific Heat
-P.c= 837.36;
+P.c= 390;
 % Heat convection coefficient
 P.h = 1; % 1 is True and 0 is False
 % electrical resistance
@@ -94,5 +94,10 @@ P.delta=1e-5;
 P.sig_cal=200E6;
 % Tolerance for change in MVF during implicit iteration
 P.MVF_tolerance=1e-8;
+try
+    P.delay = ceil(x(17));
+catch
+    P.delay = 0;
+end
 end
 
