@@ -38,7 +38,7 @@ P.E_M = P.E_A*(1+x(15));
 P.M_f = x(2);
 P.A_s = x(3);
 P.A_f = x(3) + x(4);
-P.M_s = P.M_f + (P.A_f-P.M_f)*x(1);
+P.M_s = x(2) + (P.A_f-;
 
 % Slopes of transformation boundarings into austenite (C_A) and
 % martensite (C_M) at Calibration Stress 
