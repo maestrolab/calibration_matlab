@@ -1,12 +1,5 @@
 close all; clc;
-global initial_error
-global initial_delta_eps
-global experiment
-global temperature_pseudo
-global stress_pseudo
-global strain_pseudo
-initial_error = 0;
-initial_delta_eps = 0;
+
 addpath('../temperature_driven/')
 addpath('../phase_diagram/')
 warning('off')
@@ -26,9 +19,10 @@ warning('off')
 % - x(14): n_2
 % - x(15): n_3
 % - x(16): n_4
-%% Process experimental data
-n_cycles = 5;
-
+StrainStress('100C_Test1.xlsx','J670:J2732','M670:M2732',...
+             '40C_Test1.xlsx','I7:I2093','L7:L2093',...
+             '0C_Test1.xlsx','J3101:J5056','M3101:M5056')
+         
 % Reading Excel File 
 filename = '../../data/artificial_muscle/pseudoelastic_40C.xlsx';
 temperature_pseudo = 273.15 + xlsread(filename,'E7:E2093');
